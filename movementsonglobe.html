@@ -1,0 +1,2770 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no" />
+    <title>Start Screen</title>
+
+    <script
+      data-hcs-config=""
+      data-hcs-cdn-url="https://kiloscribe.com/api/inscription-cdn/"
+      data-hcs-network="mainnet"
+      data-hcs-debug="true"
+      data-hcs-retry-attempts="5"
+      data-hcs-retry-backoff="500"
+      data-hcs-show-loading-indicator="true"
+      data-hcs-loading-callback-name="setLoadingIndicator"
+      type="e5a3c1b79eab779120034ec1-text/javascript"
+    ></script>
+
+    <script
+      data-src="hcs://1/0.0.8084872"
+      data-script-id="wallet-connect"
+      type="e5a3c1b79eab779120034ec1-text/javascript"
+    ></script>
+
+<    <link
+data-src="hcs://1/0.0.8287094"
+data-script-id="map css"
+    />>
+
+    <script
+    data-src="hcs://1/0.0.8269272"
+    data-script-id="maplibre"
+    ></script>
+    
+    <script
+    data-src="hcs://1/0.0.8269285"
+    data-script-id="supercluster"
+  ></script>
+
+  <script
+  data-src="hcs://1/0.0.8355670"
+  data-script-id="threejs 137 + GLTFLoader"
+></script>
+
+
+    <style>
+      html, body {
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        position: fixed;
+      }
+      .maplibregl-canvas {
+        background-color: rgb(0, 0, 0) !important;
+      }
+      #map {
+        position: fixed;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        width: 100%;
+        height: 100%;
+      }
+      #three-container {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+      }
+      #coordinates-display {
+        position: fixed;
+        right: 0;
+        background-color: rgba(0, 0, 0, 0.7);
+        color: white;
+        padding: 5px 10px;
+        border-radius: 4px;
+        font-family: Arial, sans-serif;
+        z-index: 1000;
+        top: 0;
+        font-size: 2.5vw;
+      }
+      #toolbar {
+        position: fixed;
+        display: flex;
+        flex-direction: column;
+        background-color: rgba(0, 0, 0, 0.8);
+        color: white;
+        padding: 1vh 1vw;
+        border-radius: 1vh;
+        z-index: 1001;
+        justify-content: space-around;
+        width: 50vw;
+        max-width: 50vw;
+        gap: 1vh;
+        top: 10vh;
+        left: 0;
+        transform: none;
+      }
+      .toolbar-column {
+        flex: 1;
+        text-align: center;
+        cursor: pointer;
+        padding: 1vh 1vw;
+        border: 0.1vh solid white;
+        border-radius: 1vh;
+        margin: 0.5vh;
+        font-size: max(1rem, min(2vw, 16px));
+        white-space: nowrap;
+      }
+      .toolbar-column:hover {
+        background-color: rgba(255, 255, 255, 0.2);
+      }
+      .flex-container {
+        display: flex;
+        align-items: center;
+        margin-bottom: 1.33vh;
+        position: relative;
+        z-index: 1003;
+      }
+      #wallet-section {
+        position: fixed;
+        top: 0;
+        left: 0;
+        display: flex;
+        align-items: center;
+        font-size: 1.6vw;
+        border-radius: 1.07vw;
+        background-color: rgba(51, 51, 51, 0.0);
+        z-index: 1003;
+        backdrop-filter: blur(5px);
+      }
+      #connect-wallet-btn,
+      #disconnect-wallet-btn {
+        padding: 0.67vh 1.33vw;
+        margin-right: 0.67vw;
+        cursor: pointer;
+        border-radius: 0.53vw;
+      }
+      #connect-wallet-btn {
+        background-color: #007bff;
+        color: white;
+        border: none;
+      }
+      #disconnect-wallet-btn {
+        display: none;
+        background-color: #ffc107;
+        color: black;
+        border: none;
+      }
+      .account-info {
+        display: flex;
+        flex-direction: column;
+        margin-left: 1.33vw;
+        font-family: Arial, sans-serif;
+        font-size: 2vw;
+      }
+      #account-id {
+        color: white;
+      }
+      .touch-button {
+        background-color: rgba(0, 0, 0, 0.2);
+        color: white;
+        border: 2px solid white;
+        padding: 0.5vh;
+        margin: 0.3vh;
+        border-radius: 1vh;
+        cursor: pointer;
+        font-size: 2vh;
+        width: 6vh;
+        height: 6vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        backdrop-filter: blur(2px);
+      }
+
+      .touch-button:hover {
+        background-color: rgba(255, 255, 255, 0.2);
+        border-color: rgba(255, 255, 255, 0.8);
+      }
+      .button-container {
+        display: grid;
+        position: fixed;
+        bottom: 5vh;
+        z-index: 1004;
+        grid-template-columns: repeat(3, 6vh);
+        grid-template-rows: repeat(3, 6vh);
+        gap: 0.3vh;
+        justify-items: center;
+        align-items: center;
+      }
+
+      #left-dpad {
+        left: 0.5vw;
+      }
+
+      #right-dpad {
+        right: 0.5vw;
+      }
+
+      #left-dpad,
+      #right-dpad {
+        display: none;
+      }
+
+      #zoom-controls {
+        position: fixed;
+        bottom: 40vh;
+        right: 0.5vw;
+        z-index: 1005;
+        display: none;
+        flex-direction: column;
+        gap: 0.5vh;
+      }
+
+      .zoom-button {
+        background-color: rgba(0, 0, 0, 0.2);
+        color: white;
+        border: 2px solid white;
+        width: 8vh;
+        height: 8vh;
+        margin: 0.3vh;
+        border-radius: 50%;
+        cursor: pointer;
+        font-size: 2.5vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        backdrop-filter: blur(2px);
+      }
+
+      .zoom-button:hover {
+        background-color: rgba(255, 255, 255, 0.2);
+        border-color: rgba(255, 255, 255, 0.8);
+      }
+
+      #toggle-controls-btn {
+        position: fixed;
+        top: 6.5vh;
+        left: 0;
+        z-index: 1006;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        padding: 0.8vh 1vw;
+        border-radius: 0.8vh;
+        cursor: pointer;
+        font-size: 1.5vh;
+        display: none;
+      }
+
+      #toggle-controls-btn:hover {
+        background-color: #0056b3;
+      }
+
+      #speed-slider {
+        position: absolute;
+        bottom: 30vh;
+        right: -2.5vw;
+        z-index: 1005;
+        width: 20vw;
+        height: 5vh;
+        writing-mode: bt-lr;
+        transform: rotate(270deg);
+      }
+
+      .maplibregl-popup {
+        max-width: none;
+        font: 2vh/3vh 'Helvetica Neue', Arial, Helvetica, sans-serif;
+        text-align: left;
+        width: auto;
+      }
+
+      .maplibregl-popup-content {
+        background-color: rgba(0, 0, 0, 0.8);
+        color: white;
+        padding: 1vh;
+        border-radius: 1vh;
+        font-size: 2vh;
+        box-shadow: 0 1vh 2vh rgba(0, 0, 0, 0.3);
+        text-align: left;
+        word-wrap: break-word;
+        white-space: normal;
+        max-width: 80vw;
+        width: max-content;
+        border: 0.3vh solid white;
+        user-select: text !important; /* Allow text selection in popups */
+        -webkit-user-select: text !important; /* Safari */
+        -moz-user-select: text !important; /* Firefox */
+        -ms-user-select: text !important; /* IE/Edge */
+      }
+
+      .maplibregl-popup-content * {
+        user-select: text !important; /* Allow text selection for all child elements */
+        -webkit-user-select: text !important;
+        -moz-user-select: text !important;
+        -ms-user-select: text !important;
+      }
+
+      .maplibregl-popup-close-button {
+        color: white;
+        font-size: 3vh;
+        border: none;
+        background: none;
+        box-shadow: none;
+        padding: 0;
+        margin: 0;
+        outline: none;
+        position: absolute;
+        top: -1vh;
+        right: 0;
+      }
+
+      .maplibregl-popup-tip {
+        border: none;
+        width: 0;
+        height: 0;
+        border-left: 1vh solid transparent;
+        border-right: 1vh solid transparent;
+        border-top: 1vh solid rgba(0, 0, 0, 0.8);
+        margin: 0 auto;
+      }
+
+      .maplibregl-popup-anchor-bottom .maplibregl-popup-tip {
+        border-top-color: rgba(0, 0, 0, 0.8);
+        border-bottom-color: transparent;
+      }
+
+      #toolbar-input {
+        font-size: max(1rem, min(2vw, 16px)) !important;
+        min-width: 0;
+        flex: 1;
+      }
+
+      @media screen and (min-width: 1024px) {
+        #toolbar {
+          width: 80vw;
+        }
+        
+        .toolbar-column {
+          padding: 0.5vh 1vw;
+        }
+      }
+
+      * {
+        -webkit-touch-callout: none;
+        -webkit-user-select: none;
+        -khtml-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+        touch-action: none;
+      }
+
+      input, textarea {
+        -webkit-user-select: text;
+        -khtml-user-select: text;
+        -moz-user-select: text;
+        -ms-user-select: text;
+        user-select: text;
+        touch-action: manipulation;
+      }
+
+      button[type="submit"],
+      #submit-button,
+      #submit-button-column2,
+      #submit-button-column3,
+      #submit-button-column5 {
+        width: 10vw; /* Adjust the width as needed */
+        height: 5vh; /* Adjust the height as needed */
+        font-size: 2vh; /* Adjust the font size for better readability */
+      }
+
+      #crosshair {
+        display: none; /* Add this line to hide by default */
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        width: 2px;
+        height: 2px;
+        background-color: white;
+        transform: translate(-50%, -50%);
+        z-index: 1007;
+      }
+      #crosshair::before {
+        content: '';
+        position: absolute;
+        background-color: var(--crosshair-color, rgb(250, 4, 4)); /* Default color if variable is not set */
+        width: var(--crosshair-before-width, 20px); /* Width of the crosshair line */
+        height: var(--crosshair-before-height, 2px); /* Default thickness */
+        top: 50%; /* Center vertically */
+        left: 50%; /* Center horizontally */
+        transform: translate(-50%, -50%); /* Adjust to center */
+      }
+      #crosshair::after {
+        content: '';
+        position: absolute;
+        background-color: var(--crosshair-color, rgb(250, 4, 4)); /* Default color if variable is not set */
+        width: var(--crosshair-after-width, 2px); /* Width of the crosshair line */
+        height: var(--crosshair-after-height, 20px); /* Height of the crosshair line */
+        top: 50%; /* Center vertically */
+        left: 50%; /* Center horizontally */
+        transform: translate(-50%, -50%); /* Adjust to center */
+      }
+    </style>
+  </head>
+  <body>
+    <div id="map"></div>
+    <div id="three-container"></div>
+    <div id="coordinates-display">Coordinates: 0.00°, 0.00°</div>
+    <div id="toolbar" style="display: none; flex-direction: column; gap: 1vh; width: 50vw; ">
+      <input 
+        type="text" 
+        id="toolbar-input"
+        placeholder="Enter URL/new username"
+        style="
+          background-color: rgba(0, 0, 0, 0.8);
+          color: white;
+          padding: 1vh 1vw;
+          border: 0.1vh solid white;
+          border-radius: 1vh;
+          font-size: 2vw;
+          width: 100%;
+          box-sizing: border-box;
+        "
+        onclick="event.stopPropagation();"
+      />
+      <div class="toolbar-column" id="button1">Change profile picture</div>
+      <div class="toolbar-column" id="button2">Change username</div>
+      <div class="toolbar-column" id="column1">Load</div>
+      <div class="toolbar-column" id="column5">Create</div>
+      <div class="toolbar-column" id="column2">Marker</div>
+      <div class="toolbar-column" id="column3">Polygon</div>
+    </div>
+
+    <div
+      id="input-toolbar"
+      style="
+        display: none;
+        position: absolute;
+        background-color: rgba(0, 0, 0, 0.8);
+        color: white;
+        padding: 10px;
+        border-radius: 4px;
+        z-index: 1002;
+      "
+    >
+      <input
+        type="text"
+        id="input-field"
+        placeholder="Enter Topic ID"
+        value="0.0.8312547"
+        style="margin-right: 10px; background-color: rgba(0, 0, 0, 0.8); color: white;"
+        onclick="event.stopPropagation();"
+      />
+      <button id="submit-button">Submit</button>
+    </div>
+
+    <div
+      id="input-toolbar-column2"
+      style="
+        display: none;
+        position: absolute;
+        background-color: rgba(0, 0, 0, 0.8);
+        color: white;
+        padding: 0px;
+        border-radius: 4px;
+        z-index: 1002;
+      "
+    >
+      <input
+        type="text"
+        id="input-field-2-0"
+        placeholder="Topic ID"
+        style="display: block; margin-bottom: 10px; width: 100%; background-color: rgba(0, 0, 0, 0.8); color: white;"
+        onclick="event.stopPropagation();"
+      />
+      <input
+        type="text"
+        id="input-field-2-1"
+        placeholder="Title"
+        style="display: block; margin-bottom: 10px; width: 100%; background-color: rgba(0, 0, 0, 0.8); color: white;"
+        onclick="event.stopPropagation();"
+      />
+      <textarea
+        type="text"
+        id="input-field-2-2"
+        placeholder="Message"
+        style="display: block; margin-bottom: 10px; width: 100%; background-color: rgba(0, 0, 0, 0.8); color: white;"
+        onclick="event.stopPropagation();"
+        oninput="this.style.height = ''; this.style.height = this.scrollHeight + 'px';"
+      ></textarea>
+      <input
+        type="text"
+        id="input-field-2-3"
+        placeholder="Coordinates long,lat"
+        style="display: block; margin-bottom: 10px; width: 100%; background-color: rgba(0, 0, 0, 0.8); color: white;"
+        onclick="event.stopPropagation();"
+      />
+      <button id="submit-button-column2" style="display: block; width: 100%">
+        Submit
+      </button>
+    </div>
+
+    <div
+      id="input-toolbar-column3"
+      style="
+        display: none;
+        position: absolute;
+        background-color: rgba(0, 0, 0, 0.8);
+        color: white;
+        padding: 0px;
+        border-radius: 4px;
+        z-index: 1002;
+      "
+    >
+      <input
+        type="text"
+        id="input-field-3-0"
+        placeholder="Topic ID"
+        style="display: block; margin-bottom: 10px; width: 100%; background-color: rgba(0, 0, 0, 0.8); color: white;"
+        onclick="event.stopPropagation();"
+      />
+      <input
+        type="text"
+        id="input-field-3-1"
+        placeholder="Title"
+        style="display: block; margin-bottom: 10px; width: 100%; background-color: rgba(0, 0, 0, 0.8); color: white;"
+        onclick="event.stopPropagation();"
+      />
+      <textarea
+        id="input-field-3-2"
+        placeholder="Message"
+        style="display: block; margin-bottom: 10px; width: 100%; background-color: rgba(0, 0, 0, 0.8); color: white; resize: none; overflow: hidden;"
+        onclick="event.stopPropagation();"
+        oninput="this.style.height = ''; this.style.height = this.scrollHeight + 'px';"
+      ></textarea>
+      <input
+      type="text"
+      id="input-field-3-3"
+      placeholder="TOP LEFT long,lat"
+      style="display: block; margin-bottom: 10px; width: 100%; background-color: rgba(0, 0, 0, 0.8); color: white;"
+      onclick="event.stopPropagation();"
+    />
+    <input
+    type="text"
+    id="input-field-3-4"
+    placeholder="BOTTOM LEFT long,lat"
+    style="display: block; margin-bottom: 10px; width: 100%; background-color: rgba(0, 0, 0, 0.8); color: white;"
+    onclick="event.stopPropagation();"
+  />
+  <input
+  type="text"
+  id="input-field-3-5"
+  placeholder="BOTTOM RIGHT long,lat"
+  style="display: block; margin-bottom: 10px; width: 100%; background-color: rgba(0, 0, 0, 0.8); color: white;"
+  onclick="event.stopPropagation();"
+/>
+<input
+type="text"
+id="input-field-3-6"
+placeholder="TOP RIGHT long,lat"
+style="display: block; margin-bottom: 10px; width: 100%; background-color: rgba(0, 0, 0, 0.8); color: white;"
+onclick="event.stopPropagation();"
+/>
+
+      <button id="submit-button-column3" style="display: block; width: 100%">
+        Submit
+      </button>
+    </div>
+
+    <div
+      id="input-toolbar-column5"
+      style="
+        display: none;
+        position: absolute;
+        background-color: rgba(0, 0, 0, 0.8);
+        color: white;
+        padding: 10px;
+        border-radius: 4px;
+        z-index: 1002;
+      "
+    >
+      <input
+        type="text"
+        id="input-field-5"
+        placeholder="Generate Topic ID"
+        style="margin-right: 10px; background-color: rgba(0, 0, 0, 0.8); color: white;"
+        readonly
+        onclick="event.stopPropagation();"
+      />
+      <button id="submit-button-column5">Submit</button>
+    </div>
+
+    <div class="flex-container">
+      <div id="wallet-section">
+        <button id="connect-wallet-btn">Connect Wallet</button>
+        <button id="disconnect-wallet-btn">Disconnect</button>
+        <div class="account-info">
+          <div id="account-id"></div>
+        </div>
+      </div>
+    </div>
+
+    <div id="left-dpad" class="button-container">
+      <button class="touch-button" style="visibility: hidden;"></button>
+      <button id="left-up" class="touch-button"></button>
+      <button class="touch-button" style="visibility: hidden;"></button>
+      <button id="left-left" class="touch-button"></button>
+      <button class="touch-button" style="visibility: hidden;"></button>
+      <button id="left-right" class="touch-button"></button>
+      <button class="touch-button" style="visibility: hidden;"></button>
+      <button id="left-down" class="touch-button"></button>
+      <button class="touch-button" style="visibility: hidden;"></button>
+    </div>
+    
+    <div id="right-dpad" class="button-container">
+      <button class="touch-button" style="visibility: hidden;"></button>
+      <button id="right-up" class="touch-button"></button>
+      <button class="touch-button" style="visibility: hidden;"></button>
+      <button id="right-left" class="touch-button"></button>
+      <button class="touch-button" style="visibility: hidden;"></button>
+      <button id="right-right" class="touch-button"></button>
+      <button class="touch-button" style="visibility: hidden;"></button>
+      <button id="right-down" class="touch-button"></button>
+      <button class="touch-button" style="visibility: hidden;"></button>
+    </div>
+
+    <div id="zoom-controls">
+      <button id="zoom-in" class="zoom-button">+</button>
+      <button id="zoom-out" class="zoom-button">-</button>
+    </div>
+
+    <input type="range" id="speed-slider" min="0.1" max="5" step="0.1" value="1" />
+
+    <button id="toggle-controls-btn" style="
+      position: fixed;
+      top: 6.5vh;
+      left: 0;
+      z-index: 1006;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      padding: 0.8vh 1vw;
+      border-radius: 0.8vh;
+      cursor: pointer;
+      font-size: 1.5vh;
+      display: none;
+    ">Controls</button>
+
+    <button id="toggle-toolbar-btn" style="
+      position: fixed;
+      top: 11vh;
+      left: 0;
+      z-index: 1006;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      padding: 0.8vh 1vw;
+      border-radius: 0.8vh;
+      cursor: pointer;
+      font-size: 1.5vh;
+      display: none;
+    ">Toolbar</button>
+
+    <button id="main-toggle-btn" style="
+      position: fixed;
+      top: 6.5vh;
+      left: 0;
+      z-index: 1006;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      padding: 0.8vh 1vw;
+      border-radius: 0.8vh;
+      cursor: pointer;
+      font-size: 1.5vh;
+    ">Options</button>
+
+    <div id="rotation-controls" style="display: none; position: fixed; top: 10.1vh; z-index: 1007; background-color: rgba(0, 0, 0, 0.8); padding: 10px; border-radius: 4px; color: white; width: 100vw;">
+        <div style="width: 50vw; float: left;">
+          <input 
+          type="text" 
+          id="object-input"
+          placeholder="Enter URL"
+          style="
+              background-color: rgba(0, 0, 0, 0.8);
+              color: white;
+              padding: 0vh 0vw;
+              border: 0.1vh solid white;
+              border-radius: 1vh;
+              font-size: 2vw;
+              width: 45vw;
+              box-sizing: border-box;
+          "
+          onclick="event.stopPropagation();"
+          />
+            <div style="display: flex; align-items: center;">
+                <label for="rotation-x" style="width: 100px;">Rotation X:</label>
+                <input type="range" id="rotation-x" min="0" max="360" value="0" style="width: 35vw;" /> <!-- Updated to 35vw -->
+                <span id="rotation-x-value" style="margin-left: 10px;">0</span>
+            </div>
+            <div style="display: flex; align-items: center;">
+                <label for="rotation-y" style="width: 100px;">Rotation Y:</label>
+                <input type="range" id="rotation-y" min="0" max="360" value="0" style="width: 35vw;" /> <!-- Updated to 35vw -->
+                <span id="rotation-y-value" style="margin-left: 10px;">0</span>
+            </div>
+            <div style="display: flex; align-items: center;">
+                <label for="rotation-z" style="width: 100px;">Rotation Z:</label>
+                <input type="range" id="rotation-z" min="0" max="360" value="0" style="width: 35vw;" /> <!-- Updated to 35vw -->
+                <span id="rotation-z-value" style="margin-left: 10px;">0</span>
+            </div>
+            <div style="display: flex; align-items: center;">
+                <label for="position-x" style="width: 100px;">Position X:</label>
+                <input type="range" id="position-x" min="-100" max="100" step="0.1" value="0" style="width: 35vw;" /> <!-- Updated to 35vw -->
+                <span id="position-x-value" style="margin-left: 10px;">0</span>
+            </div>
+            <div style="display: flex; align-items: center;">
+                <label for="position-y" style="width: 100px;">Position Y:</label>
+                <input type="range" id="position-y" min="-100" max="100" step="0.1" value="0" style="width: 35vw;" /> <!-- Updated to 35vw -->
+                <span id="position-y-value" style="margin-left: 10px;">0</span>
+            </div>
+            <div style="display: flex; align-items: center;">
+                <label for="position-z" style="width: 100px;">Position Z:</label>
+                <input type="range" id="position-z" min="-100" max="100" step="0.1" value="0" style="width: 35vw;" /> <!-- Updated to 35vw -->
+                <span id="position-z-value" style="margin-left: 10px;">0</span>
+            </div>
+            <div style="display: flex; align-items: center;">
+                <label for="scale-factor" style="width: 100px;">Scale Factor:</label>
+                <input type="range" id="scale-factor" min="0.1" max="100" step="0.1" value="1" style="width: 35vw;" /> <!-- Updated to 35vw -->
+                <span id="scale-factor-value" style="margin-left: 10px;">1</span>
+            </div>
+        </div>
+
+        <!-- New Color Sliders -->
+        <div style="width: 50vw; float: left; margin-top: -0.5vh;"> <!-- Adjusted margin-top -->
+          <div class="toolbar-column" id="buttonforobject" style="width: 45vw;">Change object</div>
+            <div style="display: flex; align-items: center;">
+                <label for="color-red" style="width: 100px;">Red:</label>
+                <input type="range" id="color-red" min="0" max="255" value="255" style="width: 35vw;" /> <!-- Updated to 35vw -->
+                <span id="color-red-value" style="margin-left: 10px;">255</span>
+            </div>
+            <div style="display: flex; align-items: center;">
+                <label for="color-green" style="width: 100px;">Green:</label>
+                <input type="range" id="color-green" min="0" max="255" value="255" style="width: 35vw;" /> <!-- Updated to 35vw -->
+                <span id="color-green-value" style="margin-left: 10px;">255</span>
+            </div>
+            <div style="display: flex; align-items: center;">
+                <label for="color-blue" style="width: 100px;">Blue:</label>
+                <input type="range" id="color-blue" min="0" max="255" value="255" style="width: 35vw;" /> <!-- Updated to 35vw -->
+                <span id="color-blue-value" style="margin-left: 10px;">255</span>
+            </div>
+            <!-- New Sliders for Crosshair -->
+            <div style="display: flex; align-items: center;">
+                <label for="crosshair-before-after" style="width: 100px;">Length:</label>
+                <input type="range" id="crosshair-before-after" min="0" max="100" value="20" style="width: 35vw;" /> <!-- Updated to 35vw -->
+                <span id="crosshair-before-after-value" style="margin-left: 10px;">20</span>
+            </div>
+            <div style="display: flex; align-items: center;">
+                <label for="crosshair-after-before" style="width: 100px;">Thickness:</label>
+                <input type="range" id="crosshair-after-before" min="0" max="10" value="2" style="width: 35vw;" /> <!-- Updated to 35vw -->
+                <span id="crosshair-after-before-value" style="margin-left: 10px;">2</span>
+            </div>
+            <div class="toolbar-column" id="savesettings" style="width: 45vw;">Save settings</div>
+        </div>
+    </div>
+
+    <div id="crosshair"></div>
+
+    <button id="toggle-rotation-controls-btn" style="
+      position: fixed;
+      top: 15.5vh;
+      left: 0;
+      z-index: 1006;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      padding: 0.8vh 1vw;
+      border-radius: 0.8vh;
+      cursor: pointer;
+      font-size: 1.5vh;
+      display: none; /* Initially hidden */
+    ">Object</button>
+
+  </body>
+
+    <script>
+
+
+      const APP_METADATA = {
+        name: "My PlanNet",
+        description: "A Hashinals application using WalletConnect",
+        url: "https://myptest.kiloscribe.com/",
+        icons: ["https://kiloscribe.com/api/inscription-cdn/0.0.4840719"],
+      };
+
+      const PROJECT_ID = "fdd65bec25e85908fecf7561fe42b41f";
+
+      let isToolbarOpen = false; // Initialize as false since toolbar starts hidden
+      let globalAccountId; // Declare an external variable to hold the accountId
+
+      window.HCSReady = async function () {
+        console.log("All resources loaded, initializing game");
+
+        const sdk = window.HashinalsWalletConnectSDK;
+        const maplibregl = window.maplibregl;
+        const Supercluster = window.Supercluster;
+        const THREE = window.THREE;
+
+
+
+        async function updateAccountInfo(accountId, balance) {
+          if (!accountId) {
+            isLoggedIn = false;
+            document.getElementById("connect-wallet-btn").style.display =
+              "block";
+            document.getElementById("disconnect-wallet-btn").style.display =
+              "none";
+            document.getElementById("account-id").textContent = ``;
+            document.getElementById("crosshair").style.display = "none";
+            return;
+          }
+
+          isLoggedIn = true;
+          document.getElementById(
+            "account-id"
+          ).textContent = `Connected: ${accountId}`;
+          document.getElementById("connect-wallet-btn").style.display = "none";
+          document.getElementById("disconnect-wallet-btn").style.display =
+            "block";
+          document.getElementById("crosshair").style.display = "block";
+          globalAccountId = accountId; // Assign accountId to the external variable
+          console.log("Account ID set:", globalAccountId); // Log when it's set
+                      // Call loadProfileObject after globalAccountId is set
+                      const profileObjectUrl = await loadProfileObject();
+            console.log("Profile Object URL:", profileObjectUrl); // Log the result
+        }
+
+        async function connectWallet() {
+          try {
+            const { balance, accountId } = await sdk.connectWallet(
+              PROJECT_ID,
+              APP_METADATA
+            );
+            console.log("account info is", accountId, balance);
+            updateAccountInfo(accountId, balance);
+          } catch (error) {
+            console.error("Failed to connect wallet:", error);
+          }
+        }
+
+        async function disconnectWallet() {
+          try {
+            await sdk.disconnectWallet(PROJECT_ID, APP_METADATA);
+            updateAccountInfo(undefined);
+          } catch (error) {
+            console.error("Failed to connect wallet:", error);
+          }
+        }
+
+        async function initAccount() {
+          const accountResponse = await sdk.initAccount(
+            PROJECT_ID,
+            APP_METADATA
+          );
+
+          if (accountResponse && accountResponse.accountId) {
+            updateAccountInfo(
+              accountResponse.accountId,
+              accountResponse.balance
+            );
+
+
+          } else {
+            console.log("Account ID not found in response");
+          }
+        }
+
+ 
+        initAccount()
+
+        document
+          .getElementById("connect-wallet-btn")
+          .addEventListener("click", connectWallet);
+        document
+          .getElementById("disconnect-wallet-btn")
+          .addEventListener("click", disconnectWallet);
+
+                // Create a new topic
+                document
+          .getElementById("submit-button-column5")
+          .addEventListener("click", async () => {
+            try {
+              createdTopicId =
+                await window.HashinalsWalletConnectSDK.createTopic();
+              console.log("New topic created:", createdTopicId);
+
+              document.getElementById("input-field-5").value = createdTopicId;
+              document.getElementById("input-field-2-0").value = createdTopicId;
+              document.getElementById("input-field-3-0").value = createdTopicId;
+              document.getElementById("input-field").value = createdTopicId;
+            } catch (error) {
+              console.error("Error creating topic:", error);
+              alert(
+                "There was an error creating the topic. Check the console for details."
+              );
+            }
+          });  
+
+          
+
+          async function loadProfilePicture() {
+            const topicId = "0.0.8324579";
+            const accountUrls = {}; // Dictionary to store account IDs and their URLs
+
+            try {
+              const result = await window.HashinalsWalletConnectSDK.getMessages(topicId);
+
+              // Check if result exists and has messages
+              if (!result || !Array.isArray(result.messages)) {
+                console.log("No profile pictures found, using defaults");
+                return {};
+              }
+
+              // Process all messages to build the accountUrls dictionary
+              result.messages.forEach(message => {
+                if (message.payer && message.data && message.data.urls && message.data.urls.length > 0) {
+                  // Store or update the URL for this account
+                  accountUrls[message.payer] = {
+                    url: message.data.urls[0],
+                    timestamp: message.timestamp
+                  };
+                }
+              });
+
+      
+              return accountUrls;
+
+            } catch (error) {
+              console.log("Error in loadProfilePicture:", error);
+              return {}; // Return empty object instead of throwing error
+            }
+          }
+          loadProfilePicture();
+
+          async function loadUsername() {
+            const topicId = "0.0.8337931";
+            const accountUsernames = {}; // Dictionary to store account IDs and their usernames
+
+            try {
+              const result = await window.HashinalsWalletConnectSDK.getMessages(topicId);
+           
+
+              // Check if result exists and has messages
+              if (!result || !Array.isArray(result.messages)) {
+                console.log("No usernames found, using defaults");
+                return {};
+              }
+
+              // Process all messages to build the accountUsernames dictionary
+              result.messages.forEach(message => {
+                if (message.payer && message.data && message.data.username) {
+                  // Store or update the username for this account
+                  accountUsernames[message.payer] = {
+                    username: message.data.username,
+                    timestamp: message.timestamp
+                  };
+                }
+              });
+
+    
+              return accountUsernames;
+
+            } catch (error) {
+              console.log("Error in loadUsername:", error);
+              return {}; // Return empty object instead of throwing error
+            }
+          }
+
+          const geojson = {
+  type: "FeatureCollection",
+  features: []
+};
+const polygons = [];
+
+document.getElementById("submit-button").addEventListener("click", async () => {
+  try {
+    const profilePics = await loadProfilePicture();
+    const usernames = await loadUsername();
+    const topicId = document.getElementById("input-field").value;
+    const result = await window.HashinalsWalletConnectSDK.getMessages(topicId);
+
+
+    if (!result || !Array.isArray(result.messages)) {
+      console.log("No messages found for topic:", topicId);
+      return;
+    }
+
+    // Clear existing features and polygons
+    geojson.features = [];
+    polygons.length = 0;
+
+    // Remove existing markers
+    existingMarkers.forEach(marker => marker.remove());
+    existingMarkers = [];
+
+    // Remove existing polygon layers and sources
+    map.getStyle().layers.forEach(layer => {
+      if (layer.id.includes('-pattern-layer')) {
+        map.removeLayer(layer.id);
+      }
+    });
+
+    const sourceIds = Object.keys(map.getStyle().sources);
+    sourceIds.forEach(sourceId => {
+      if (sourceId.includes('-source')) {
+        map.removeSource(sourceId);
+      }
+    });
+
+    result.messages.forEach((message, index) => {
+      
+      try {
+        let parsedMessage = message;
+        if (typeof message === 'string') {
+          parsedMessage = JSON.parse(message);
+        }
+
+        const defaultProfilePic = "https://kiloscribe.com/api/inscription-cdn/0.0.4819119";
+        const profileUrl = message.payer && profilePics[message.payer] ? 
+          profilePics[message.payer].url : 
+          defaultProfilePic;
+        
+        const payerInfo = message.payer ? `${message.payer}` : 'Anonymous';
+        const username = message.payer && usernames[message.payer] ? 
+          ` ${usernames[message.payer].username}` : 
+          '';
+        
+        // Combine username and payerInfo with h2 tags
+        const displayHeader = `<h2>${payerInfo}${username}</h2>`;
+
+        // Handle marker type messages
+        if (parsedMessage.marker && parsedMessage.marker.data) {
+          let coords;
+          try {
+            const cordData = parsedMessage.marker.data.cord;
+            
+            if (typeof cordData === 'string') {
+              coords = cordData.split(',').map(num => parseFloat(num.trim()));
+            } else if (Array.isArray(cordData)) {
+              coords = cordData;
+            } else {
+              throw new Error('Unsupported coordinate format');
+            }
+            
+            if (!Array.isArray(coords) || coords.length !== 2 || coords.some(isNaN)) {
+              throw new Error('Invalid coordinate format');
+            }
+
+            geojson.features.push({
+              type: "Feature",
+              properties: {
+                message: `${displayHeader}<strong>${parsedMessage.marker.data.title}</strong><p>${parsedMessage.marker.data.msg}</p>`,
+                imageUrl: profileUrl
+              },
+              geometry: {
+                type: "Point",
+                coordinates: coords
+              }
+            });
+          } catch (coordError) {
+            console.error("Error parsing marker coordinates:", coordError, "Raw coords:", parsedMessage.marker.data.cord);
+          }
+        }
+
+        // Handle polygon type messages
+        if (parsedMessage.polygon && parsedMessage.polygon.data) {
+          try {
+            let coordinates;
+            const cordStr = parsedMessage.polygon.data.cord;
+  
+            
+            // Try multiple parsing approaches
+            try {
+              coordinates = JSON.parse(cordStr);
+            } catch {
+              try {
+                const cleanedStr = cordStr
+                  .replace(/\s+/g, '')
+                  .replace(/\]\[/g, '],[')
+                  .replace(/^\[?(.+?)\]?$/, '[$1]');
+                coordinates = JSON.parse(cleanedStr);
+              } catch {
+                const coordPairs = cordStr.match(/\[-?\d+\.?\d*,\s*-?\d+\.?\d*\]/g);
+                if (coordPairs) {
+                  coordinates = coordPairs.map(pair => JSON.parse(pair));
+                }
+              }
+            }
+
+
+            // Ensure coordinates form a closed polygon
+            if (Array.isArray(coordinates) && coordinates.length > 2) {
+              // Check if first and last points match
+              const firstPoint = coordinates[0];
+              const lastPoint = coordinates[coordinates.length - 1];
+              if (firstPoint[0] !== lastPoint[0] || firstPoint[1] !== lastPoint[1]) {
+                coordinates.push([...firstPoint]); // Close the polygon
+              }
+
+              polygons.push({
+                id: `polygon-${index}`,
+                coordinates: [coordinates], // Note the extra array wrapping
+                description: `${displayHeader}<strong>${parsedMessage.polygon.data.title}</strong><p>${parsedMessage.polygon.data.msg}</p>`,
+                imageUrl: profileUrl
+              });
+         
+            } else {
+              console.error("Invalid polygon coordinates:", coordinates);
+            }
+          } catch (polygonError) {
+            console.error("Error parsing polygon data:", polygonError);
+          }
+        }
+      } catch (messageError) {
+        console.error(`Error processing message ${index}:`, messageError);
+      }
+    });
+    
+    // Update markers/clusters
+    if (geojson.features.length > 0) {
+      index.load(geojson.features);
+      updateClusters();
+    }
+
+    // Add new polygons
+    polygons.forEach(polygon => {
+      addPolygonWithImageFill(map, polygon);
+    });
+    
+  } catch (error) {
+    console.error("Error processing topic messages:", error);
+  }
+});
+
+const renderer = new THREE.WebGLRenderer({ alpha: true });
+renderer.setSize(window.innerWidth, window.innerHeight);
+renderer.setPixelRatio(window.devicePixelRatio);
+document
+  .getElementById("three-container")
+  .appendChild(renderer.domElement);
+
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(
+  45,
+  window.innerWidth / window.innerHeight,
+  0.1,
+  1000
+);
+
+function createStars() {
+  const starsGeometry = new THREE.BufferGeometry();
+  const starCount = 25000;
+  const positions = new Float32Array(starCount * 3);
+  const spawnRadius = 10;
+
+  for (let i = 0; i < starCount; i++) {
+    const i3 = i * 3;
+    positions[i3] = (Math.random() - 0.5) * 2000 + spawnRadius;
+    positions[i3 + 1] = (Math.random() - 0.5) * 2000 + spawnRadius;
+    positions[i3 + 2] = (Math.random() - 0.5) * 2000 + spawnRadius;
+  }
+
+  starsGeometry.setAttribute(
+    "position",
+    new THREE.BufferAttribute(positions, 3)
+  );
+  const starsMaterial = new THREE.PointsMaterial({
+    color: 0xffffff,
+    size: 0.5,
+    sizeAttenuation: true,
+  });
+
+  const stars = new THREE.Points(starsGeometry, starsMaterial);
+  scene.add(stars);
+  return stars;
+}
+
+const stars = createStars();
+
+
+const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+scene.add(ambientLight);
+
+const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
+directionalLight.position.set(5, 5, 5);
+scene.add(directionalLight);
+
+camera.position.z = 10;
+
+const map = new maplibregl.Map({
+  container: "map",
+  style: "https://tiles.openfreemap.org/styles/liberty",
+  center: [30.0, 40.0],
+  zoom: 1.5,
+  pitch: 0,
+  bearing: 0,
+  maxPitch: 75,
+  maxZoom: 19,
+  antialias: true,
+  projection: {
+    name: "globe",
+  },
+});
+
+map.dragPan.disable();
+map.scrollZoom.disable();
+map.boxZoom.disable();
+map.doubleClickZoom.disable();
+map.touchZoomRotate.disable();
+map.dragRotate.disable();
+
+map.on("style.load", () => {
+  map.setProjection({
+    type: "globe",
+  });
+
+  const layers = map.getStyle().layers;
+  const roadShieldLayer = layers.find(
+    (layer) =>
+      layer.id.toLowerCase().includes("road_shield") ||
+      layer.id.toLowerCase().includes("shield")
+  );
+
+  if (roadShieldLayer) {
+    map.setLayoutProperty(roadShieldLayer.id, "visibility", "none");
+  }
+});
+
+
+const keys = {
+  w: false,
+  a: false,
+  s: false,
+  d: false,
+  q: false,
+  e: false,
+  space: false,
+  shift: false,
+  r: false,
+  f: false,
+};
+
+const MOVE_SPEED = 0.5;
+const BUTTON_PAN_SPEED = 6;
+const BUTTON_ZOOM_SPEED = 0.05;
+
+const speedSlider = document.getElementById("speed-slider");
+
+function getSpeedMultiplier() {
+  return parseFloat(speedSlider.value);
+}
+
+function checkToolbarStatus() {
+  const toolbars = [
+    document.getElementById("input-toolbar"),
+    document.getElementById("input-toolbar-column2"),
+    document.getElementById("input-toolbar-column3"),
+    document.getElementById("input-toolbar-column5"),
+    document.getElementById("toolbar")
+  ];
+  
+  isToolbarOpen = toolbars.some(toolbar => 
+    toolbar.style.display === "block" || toolbar.style.display === "flex"
+  );
+}
+
+function handleMovement() {
+  if (isToolbarOpen) return;
+
+  const zoom = map.getZoom();
+  const panSpeed = 3 * getSpeedMultiplier();
+  const zoomSpeed = 0.01 * getSpeedMultiplier();
+
+  if (keys.w) {
+    map.panBy([0, -panSpeed], { animate: false });
+  }
+  if (keys.s) {
+    map.panBy([0, panSpeed], { animate: false });
+  }
+
+  if (keys.a) {
+    map.panBy([-panSpeed, 0], { animate: false });
+  }
+  if (keys.d) {
+    map.panBy([panSpeed, 0], { animate: false });
+  }
+
+  if (keys.e) {
+    map.setBearing(map.getBearing() + MOVE_SPEED * getSpeedMultiplier());
+  }
+  if (keys.q) {
+    map.setBearing(map.getBearing() - MOVE_SPEED * getSpeedMultiplier());
+  }
+
+  if (keys.space) {
+    map.setZoom(map.getZoom() + zoomSpeed);
+  }
+  if (keys.shift) {
+    map.setZoom(map.getZoom() - zoomSpeed);
+  }
+
+  if (keys.r) {
+    map.setPitch(map.getPitch() + 1 * getSpeedMultiplier());
+  }
+  if (keys.f) {
+    map.setPitch(map.getPitch() - 1 * getSpeedMultiplier());
+  }
+}
+
+document.addEventListener("keydown", (event) => {
+  const activeElement = document.activeElement; // Get the currently focused element
+  const isInputField = activeElement.tagName === "INPUT" || activeElement.tagName === "TEXTAREA";
+
+  switch (event.key.toLowerCase()) {
+    case "w":
+      keys.w = true;
+      break;
+    case "a":
+      keys.a = true;
+      break;
+    case "s":
+      keys.s = true;
+      break;
+    case "d":
+      keys.d = true;
+      break;
+    case "q":
+      keys.q = true;
+      break;
+    case "e":
+      keys.e = true;
+      break;
+    case " ":
+      if (!isInputField) { // Only prevent default if not in an input field
+        keys.shift = true;
+        event.preventDefault();
+      }
+      break;
+    case "shift":
+      keys.space = true;
+      break;
+    case "r":
+      keys.r = true;
+      break;
+    case "f":
+      keys.f = true;
+      break;
+  }
+});
+
+document.addEventListener("keyup", (event) => {
+  switch (event.key.toLowerCase()) {
+    case "w":
+      keys.w = false;
+      break;
+    case "a":
+      keys.a = false;
+      break;
+    case "s":
+      keys.s = false;
+      break;
+    case "d":
+      keys.d = false;
+      break;
+    case "q":
+      keys.q = false;
+      break;
+    case "e":
+      keys.e = false;
+      break;
+    case " ":
+      keys.shift = false;
+      break;
+    case "shift":
+      keys.space = false;
+      break;
+    case "r":
+      keys.r = false;
+      break;
+    case "f":
+      keys.f = false;
+      break;
+  }
+});
+
+document.addEventListener("click", () => {
+  // Remove or modify this event listener as it's interfering with the toolbar toggle
+  // Only hide toolbar if click is outside the toolbar and its toggle button
+  const toolbar = document.getElementById("toolbar");
+  const toggleButton = document.getElementById("toggle-toolbar-btn");
+  if (!toolbar.contains(event.target) && event.target !== toggleButton) {
+    toolbar.style.display = "none";
+    isToolbarOpen = false;
+  }
+});
+
+document.getElementById("toggle-toolbar-btn").addEventListener("click", function(event) {
+  // Stop event propagation to prevent document click handler from firing
+  event.stopPropagation();
+  
+  // Get the toolbar element
+  const toolbar = document.getElementById("toolbar");
+  
+  // Toggle isToolbarOpen state
+  isToolbarOpen = !isToolbarOpen;
+  
+  // Explicitly set display style based on current state
+  if (isToolbarOpen) {
+    toolbar.style.display = "flex";
+    console.log("Toolbar should be visible now", toolbar);
+  } else {
+    toolbar.style.display = "none";
+    console.log("Toolbar should be hidden now", toolbar);
+  }
+  
+  // Hide both toggle buttons and show the main button
+  document.getElementById("toggle-controls-btn").style.display = "none";
+  document.getElementById("toggle-toolbar-btn").style.display = "none";
+  document.getElementById("main-toggle-btn").style.display = "block";
+});
+
+// Add a click handler to the toolbar itself to prevent event bubbling
+document.getElementById("toolbar").addEventListener("click", function(event) {
+  event.stopPropagation();
+});
+
+// Modify the document click handler to not close the toolbar if it's clicked
+document.addEventListener("click", (event) => {
+  const toggleControlsBtn = document.getElementById("toggle-controls-btn");
+  const toggleToolbarBtn = document.getElementById("toggle-toolbar-btn");
+  const mainToggleBtn = document.getElementById("main-toggle-btn");
+  const toolbar = document.getElementById("toolbar");
+
+  // Check if the click is outside the toggle buttons and the toolbar
+  if (
+    !toggleControlsBtn.contains(event.target) &&
+    !toggleToolbarBtn.contains(event.target) &&
+    !mainToggleBtn.contains(event.target) &&
+    !toolbar.contains(event.target)
+  ) {
+    // Hide the toggle buttons
+    toggleControlsBtn.style.display = "none";
+    toggleToolbarBtn.style.display = "none";
+
+    // Show only the main "Options" button
+    mainToggleBtn.style.display = "block";
+
+    // Hide the toolbar
+    toolbar.style.display = "none";
+  }
+});
+
+// Ensure the toolbar toggle button also toggles the toolbar visibility
+document.getElementById("toggle-toolbar-btn").addEventListener("click", (event) => {
+  event.stopPropagation(); // Prevent the click from reaching the document listener
+  const toolbar = document.getElementById("toolbar");
+  toolbar.style.display = toolbar.style.display === "none" ? "flex" : "none";
+});
+
+function closeAllColumns() {
+  const columns = [
+    "input-toolbar",
+    "input-toolbar-column2",
+    "input-toolbar-column3",
+    "input-toolbar-column5"
+  ];
+  
+  columns.forEach(columnId => {
+    const column = document.getElementById(columnId);
+    if (column) {
+      column.style.display = "none";
+    }
+  });
+}
+
+document.getElementById("column1").addEventListener("click", (event) => {
+  console.log("Column 1 clicked");
+  closeAllColumns();
+  const inputToolbar = document.getElementById("input-toolbar");
+  const toolbarRect = document.getElementById("toolbar").getBoundingClientRect();
+  inputToolbar.style.display = "block";
+  inputToolbar.style.left = `${toolbarRect.right + 0}px`;
+  inputToolbar.style.top = `${toolbarRect.top}px`;
+  checkToolbarStatus();
+});
+
+// Add this event listener to close column1 when clicking outside
+document.addEventListener("click", (event) => {
+  const inputToolbarColumn1 = document.getElementById("input-toolbar");
+  if (
+    event.target.id !== "column1" &&
+    !inputToolbarColumn1.contains(event.target)
+  ) {
+    inputToolbarColumn1.style.display = "none";
+  }
+});
+
+document.getElementById("column2").addEventListener("click", (event) => {
+  console.log("Column 2 clicked");
+  closeAllColumns();
+  const inputToolbarColumn2 = document.getElementById("input-toolbar-column2");
+  const toolbarRect = document.getElementById("toolbar").getBoundingClientRect();
+  inputToolbarColumn2.style.display = "block";
+  inputToolbarColumn2.style.left = `${toolbarRect.right + 0}px`;
+  inputToolbarColumn2.style.top = `${toolbarRect.top}px`;
+  checkToolbarStatus();
+});
+
+document.getElementById("column3").addEventListener("click", (event) => {
+  console.log("Column 3 clicked");
+  closeAllColumns();
+  const inputToolbarColumn3 = document.getElementById("input-toolbar-column3");
+  const toolbarRect = document.getElementById("toolbar").getBoundingClientRect();
+  inputToolbarColumn3.style.display = "block";
+  inputToolbarColumn3.style.left = `${toolbarRect.right + 0}px`;
+  inputToolbarColumn3.style.top = `${toolbarRect.top}px`;
+  checkToolbarStatus();
+});
+
+
+document.getElementById("column5").addEventListener("click", (event) => {
+  console.log("Column 5 clicked");
+  closeAllColumns();
+  const inputToolbarColumn5 = document.getElementById("input-toolbar-column5");
+  const toolbarRect = document.getElementById("toolbar").getBoundingClientRect();
+  inputToolbarColumn5.style.display = "block";
+  inputToolbarColumn5.style.left = `${toolbarRect.right + 0}px`;
+  inputToolbarColumn5.style.top = `${toolbarRect.top}px`;
+  checkToolbarStatus();
+});
+
+document
+  .getElementById("submit-button")
+  .addEventListener("click", (event) => {
+    event.stopPropagation();
+    const inputValue = document.getElementById("input-field").value;
+  });
+
+document.getElementById("column2").addEventListener("click", (event) => {
+  console.log("Column 2 clicked");
+  const inputToolbarColumn2 = document.getElementById("input-toolbar-column2");
+  const toolbarRect = document.getElementById("toolbar").getBoundingClientRect();
+  inputToolbarColumn2.style.display = "block";
+  inputToolbarColumn2.style.left = `${toolbarRect.right + 0}px`;
+  inputToolbarColumn2.style.top = `${toolbarRect.top}px`;
+  checkToolbarStatus();
+});
+
+document
+  .getElementById("submit-button-column2")
+  .addEventListener("click", async () => {
+    try {
+      const topicId = document.getElementById("input-field-2-0").value;
+      const title = document.getElementById("input-field-2-1").value;
+      const msg = document.getElementById("input-field-2-2").value;
+      const cord = document.getElementById("input-field-2-3").value;
+      
+      console.log('Submitting message with:', { topicId, title, cord, msg });
+      
+      const messageObj = {marker: {data: {title: title, msg: msg, cord: cord }}};
+      const message = JSON.stringify(messageObj); // Convert to string
+      
+      const receipt = await window.HashinalsWalletConnectSDK.submitMessageToTopic(
+        topicId,
+        message // Send stringified message
+      );
+      console.log('Receipt:', receipt);
+      
+      // Clear inputs after successful submission
+      document.getElementById("input-field-2-0").value = '';
+      document.getElementById("input-field-2-1").value = '';
+      document.getElementById("input-field-2-2").value = '';
+      document.getElementById("input-field-2-3").value = '';
+      
+    } catch (error) {
+      console.error('Error submitting message:', error);
+      alert('Failed to submit message. Check console for details.');
+    }
+  });
+
+document.addEventListener("click", (event) => {
+  const inputToolbarColumn2 = document.getElementById(
+    "input-toolbar-column2"
+  );
+  if (
+    event.target.id !== "column2" &&
+    !inputToolbarColumn2.contains(event.target)
+  ) {
+    inputToolbarColumn2.style.display = "none";
+  }
+});
+
+document.getElementById("column3").addEventListener("click", (event) => {
+  console.log("Column 3 clicked");
+  const inputToolbarColumn3 = document.getElementById("input-toolbar-column3");
+  const toolbarRect = document.getElementById("toolbar").getBoundingClientRect();
+  inputToolbarColumn3.style.display = "block";
+  inputToolbarColumn3.style.left = `${toolbarRect.right + 0}px`;
+  inputToolbarColumn3.style.top = `${toolbarRect.top}px`;
+  checkToolbarStatus();
+});
+
+document
+  .getElementById("submit-button-column3")
+  .addEventListener("click", async () => {
+    try {
+      const topicId = document.getElementById("input-field-3-0").value;
+      const title = document.getElementById("input-field-3-1").value;
+      const msg = document.getElementById("input-field-3-2").value;
+      const cord1 = document.getElementById("input-field-3-3").value; // TOP LEFT
+      const cord2 = document.getElementById("input-field-3-4").value; // BOTTOM LEFT
+      const cord3 = document.getElementById("input-field-3-5").value; // BOTTOM RIGHT
+      const cord4 = document.getElementById("input-field-3-6").value; // TOP RIGHT
+      
+      // Validate and format the coordinates input
+      const formattedCord = [
+        cord1.split(',').map(Number), // Convert to array of numbers
+        cord2.split(',').map(Number),
+        cord3.split(',').map(Number),
+        cord4.split(',').map(Number)
+      ];
+      if (formattedCord.some(cord => !cord.match(/^-?\d+(\.\d+)?,-?\d+(\.\d+)?$/))) {
+        throw new Error('Please enter valid coordinates in the format number,number for all four corners.');
+      }
+      const cordString = formattedCord.join(','); // Join the valid coordinates
+      
+      console.log('Submitting message with:', { topicId, title, msg, cord: cordString });
+      
+      const messageObj = {
+        polygon: {
+          data: {
+            title: title,
+            msg: msg,
+            cord: cordString
+          }
+        }
+      };
+      const message = JSON.stringify(messageObj);
+      
+      const receipt = await window.HashinalsWalletConnectSDK.submitMessageToTopic(
+        topicId,
+        message
+      );
+      console.log('Receipt:', receipt);
+      
+      // Clear inputs after successful submission
+      document.getElementById("input-field-3-0").value = '';
+      document.getElementById("input-field-3-1").value = '';
+      document.getElementById("input-field-3-2").value = '';
+      document.getElementById("input-field-3-3").value = '';
+      document.getElementById("input-field-3-4").value = '';
+      document.getElementById("input-field-3-5").value = '';
+      document.getElementById("input-field-3-6").value = '';
+      
+    } catch (error) {
+      console.error('Error submitting message:', error);
+      alert('Failed to submit message. Check console for details.');
+    }
+  });
+
+
+
+document.addEventListener("click", (event) => {
+  const inputToolbarColumn3 = document.getElementById(
+    "input-toolbar-column3"
+  );
+  if (
+    event.target.id !== "column3" &&
+    !inputToolbarColumn3.contains(event.target)
+  ) {
+    inputToolbarColumn3.style.display = "none";
+  }
+});
+
+
+document.getElementById("column5").addEventListener("click", (event) => {
+  console.log("Column 5 clicked");
+  const inputToolbarColumn5 = document.getElementById("input-toolbar-column5");
+  const toolbarRect = document.getElementById("toolbar").getBoundingClientRect();
+  inputToolbarColumn5.style.display = "block";
+  inputToolbarColumn5.style.left = `${toolbarRect.right + 0}px`;
+  inputToolbarColumn5.style.top = `${toolbarRect.top}px`;
+  checkToolbarStatus();
+});
+
+document
+  .getElementById("submit-button-column5")
+  .addEventListener("click", (event) => {
+    event.stopPropagation();
+    const inputValue = document.getElementById("input-field-5").value;
+    console.log("Input value for column 5:", inputValue);
+  });
+
+document.addEventListener("click", (event) => {
+  const inputToolbarColumn5 = document.getElementById(
+    "input-toolbar-column5"
+  );
+  if (
+    event.target.id !== "column5" &&
+    !inputToolbarColumn5.contains(event.target)
+  ) {
+    inputToolbarColumn5.style.display = "none";
+  }
+});
+
+function animate() {
+  requestAnimationFrame(animate);
+  handleMovement();
+
+  const zoomLevel = map.getZoom().toFixed(1);
+  const pitchAngle = Math.round(map.getPitch());
+  const center = map.getCenter();
+  const lat = center.lat.toFixed(4);
+  const lng = center.lng.toFixed(4);
+
+  document.getElementById(
+    "coordinates-display"
+  ).textContent = `Coordinates: ${lng}°, ${lat}°`;
+
+  stars.rotation.y += 0.0001;
+
+  renderer.render(scene, camera);
+}
+
+window.addEventListener("resize", () => {
+  camera.aspect = window.innerWidth / window.innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(window.innerWidth, window.innerHeight);
+  map.resize();
+});
+
+animate();
+
+function openPopup(marker) {
+  new maplibregl.Popup({ offset: 25 })
+    .setLngLat(marker.geometry.coordinates)
+    .setText(marker.properties.message)
+    .addTo(map);
+}
+
+const index = new Supercluster({
+  radius: 60,
+  maxZoom: 16,
+});
+
+// Only load features if there are any
+if (geojson.features.length > 0) {
+  index.load(geojson.features);
+}
+
+function debounce(func, wait) {
+  let timeout;
+  return function (...args) {
+    const context = this;
+    clearTimeout(timeout);
+    timeout = setTimeout(() => func.apply(context, args), wait);
+  };
+}
+
+let existingMarkers = [];
+
+function createLowQualityImage(imageUrl, size = 32) {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    img.crossOrigin = "Anonymous";
+    img.onload = () => {
+      // Create a small canvas for the low quality version
+      const canvas = document.createElement('canvas');
+      canvas.width = size;
+      canvas.height = size;
+      const ctx = canvas.getContext('2d');
+      
+      // Draw image at lower resolution
+      ctx.drawImage(img, 0, 0, size, size);
+      
+      // Convert to low quality JPEG-like format
+      resolve(canvas.toDataURL('image/jpeg', 0.5));
+    };
+    img.onerror = reject;
+    img.src = imageUrl;
+  });
+}
+
+let lastBounds = null;
+
+function updateClusters() {
+  if (geojson.features.length === 0) {
+    return;
+  }
+
+  const currentBounds = map.getBounds().toArray().flat();
+  
+  if (lastBounds) {
+    const boundsChange = currentBounds.some((val, idx) => 
+      Math.abs(val - lastBounds[idx]) > 0.01
+    );
+    if (!boundsChange) return;
+  }
+  
+  lastBounds = currentBounds;
+  
+  const zoom = map.getZoom();
+  const clusters = index.getClusters(currentBounds, Math.floor(zoom));
+  existingMarkers.forEach((marker) => marker.remove());
+  existingMarkers = [];
+
+  clusters.forEach(async (cluster) => {
+    const el = document.createElement("div");
+    el.className = cluster.properties.cluster ? "cluster-marker" : "marker";
+    const iconSize = [`${5}vh`, `${5}vh`];
+    el.style.width = iconSize[0];
+    el.style.height = iconSize[1];
+    el.style.cursor = "pointer";
+    el.style.borderRadius = "50%";
+
+    if (cluster.properties.cluster) {
+      el.textContent = cluster.properties.point_count_abbreviated;
+      el.style.color = "black";
+      el.style.textAlign = "center";
+      el.style.lineHeight = iconSize[0];
+      el.style.backgroundColor = "rgba(255, 255, 255, 0.8)";
+    } else {
+      try {
+        // Create low quality version of the image
+        const lowQualityUrl = await createLowQualityImage(cluster.properties.imageUrl);
+        el.style.backgroundImage = `url(${lowQualityUrl})`;
+        el.style.backgroundSize = "cover";
+        
+        // Load high quality version in the background
+        const img = new Image();
+        img.onload = () => {
+          el.style.backgroundImage = `url(${cluster.properties.imageUrl})`;
+        };
+        img.src = cluster.properties.imageUrl;
+      } catch (error) {
+        console.error("Error loading marker image:", error);
+        // Use a fallback color or image
+        el.style.backgroundColor = "rgba(255, 255, 255, 0.8)";
+      }
+    }
+
+    const marker = new maplibregl.Marker({ element: el })
+      .setLngLat(cluster.geometry.coordinates)
+      .addTo(map);
+
+    if (!cluster.properties.cluster) {
+      const popup = new maplibregl.Popup({ offset: 25 }).setHTML(
+        cluster.properties.message
+      );
+      
+      el.addEventListener("click", (e) => {
+        e.stopPropagation(); // Stop event from reaching polygon layer
+        if (!cluster.properties.cluster) {
+          popup.setLngLat(cluster.geometry.coordinates).addTo(map);
+        }
+      });
+    }
+
+    existingMarkers.push(marker);
+  });
+}
+
+const debouncedUpdateClusters = debounce(updateClusters, 1000); // Increase from 200 to 1000ms
+
+map.on("moveend", debouncedUpdateClusters);
+
+updateClusters();
+
+window.addEventListener("beforeunload", () => {
+  map.remove();
+  scene.clear();
+  renderer.dispose();
+});
+
+function createResizedImage(imageUrl, maxWidth = 256, maxHeight = 256) {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    img.crossOrigin = "Anonymous";
+    
+    img.onload = () => {
+      const canvas = document.createElement('canvas');
+      let width = img.width;
+      let height = img.height;
+      
+      // Calculate new dimensions while maintaining aspect ratio
+      if (width > height) {
+        if (width > maxWidth) {
+          height = Math.round(height * (maxWidth / width));
+          width = maxWidth;
+        }
+      } else {
+        if (height > maxHeight) {
+          width = Math.round(width * (maxHeight / height));
+          height = maxHeight;
+        }
+      }
+      
+      canvas.width = width;
+      canvas.height = height;
+      
+      const ctx = canvas.getContext('2d');
+      // Use better image smoothing
+      ctx.imageSmoothingEnabled = true;
+      ctx.imageSmoothingQuality = 'high';
+      
+      ctx.drawImage(img, 0, 0, width, height);
+      resolve(canvas.toDataURL('image/jpeg', 1)); // Adjust quality here (0-1)
+    };
+    
+    img.onerror = reject;
+    img.src = imageUrl;
+  });
+}
+
+function addPolygonWithImageFill(map, polygon) {
+  const sourceId = `${polygon.id}-source`;
+  const layerId = `${polygon.id}-image-layer`;
+
+  // Remove existing layer and source if they exist
+  if (map.getLayer(layerId)) {
+    map.off('click', layerId);
+    map.off('mouseenter', layerId);
+    map.off('mouseleave', layerId);
+    map.removeLayer(layerId);
+  }
+  if (map.getSource(sourceId)) {
+    map.removeSource(sourceId);
+  }
+
+  // Calculate the bounding box of the polygon
+  const coordinates = polygon.coordinates[0];
+  const bounds = coordinates.reduce((bounds, coord) => {
+    return {
+      minLng: Math.min(bounds.minLng, coord[0]),
+      maxLng: Math.max(bounds.maxLng, coord[0]),
+      minLat: Math.min(bounds.minLat, coord[1]),
+      maxLat: Math.max(bounds.maxLat, coord[1])
+    };
+  }, {
+    minLng: Infinity,
+    maxLng: -Infinity,
+    minLat: Infinity,
+    maxLat: -Infinity
+  });
+
+  // Create and add the resized image
+  createResizedImage(polygon.imageUrl, 512, 512) // For higher resolution
+    .then(resizedImageUrl => {
+      // Add image source with resized image
+      map.addSource(sourceId, {
+        type: 'image',
+        url: resizedImageUrl,
+        coordinates: [
+          [bounds.minLng, bounds.maxLat],
+          [bounds.maxLng, bounds.maxLat],
+          [bounds.maxLng, bounds.minLat],
+          [bounds.minLng, bounds.minLat]
+        ]
+      });
+
+      // Add the image layer with additional rendering options
+      map.addLayer({
+        id: layerId,
+        type: 'raster',
+        source: sourceId,
+        paint: {
+          'raster-opacity': 0.3,
+          'raster-fade-duration': 0,
+          'raster-resampling': 'linear', // Can be 'linear' or 'nearest'
+          // Adjust brightness, contrast, saturation if needed
+          'raster-brightness-min': 0,
+          'raster-brightness-max': 1,
+          'raster-contrast': 0,
+          'raster-saturation': 0
+        }
+      });
+
+      // Add mask for the polygon
+      const maskSourceId = `${polygon.id}-mask-source`;
+      const maskLayerId = `${polygon.id}-mask-layer`;
+
+      map.addSource(maskSourceId, {
+        type: 'geojson',
+        data: {
+          type: 'Feature',
+          properties: {},
+          geometry: {
+            type: 'Polygon',
+            coordinates: polygon.coordinates
+          }
+        }
+      });
+
+      // Add the mask layer
+      map.addLayer({
+        id: maskLayerId,
+        type: 'fill',
+        source: maskSourceId,
+        paint: {
+          'fill-opacity': 0,
+          'fill-outline-color': '#000'
+        }
+      });
+
+      // Set the mask
+      map.setLayerZoomRange(layerId, 0, 24);
+      
+      // Add interactivity
+      const popup = new maplibregl.Popup();
+      
+      map.on('click', maskLayerId, (e) => {
+        // Check if click event originated from a marker
+        if (e.originalEvent.defaultPrevented) {
+          return; // Exit if event was handled by marker
+        }
+        
+        if (polygon.description) {
+          popup
+            .setLngLat(e.lngLat)
+            .setHTML(polygon.description)
+            .addTo(map);
+        }
+      });
+
+      map.on('mouseenter', maskLayerId, () => {
+        map.getCanvas().style.cursor = 'pointer';
+      });
+
+      map.on('mouseleave', maskLayerId, () => {
+        map.getCanvas().style.cursor = '';
+      });
+    })
+    .catch(error => {
+      console.error('Error loading or resizing image:', error);
+    });
+}
+
+polygons.forEach((polygon) => {
+  addPolygonWithImageFill(map, polygon);
+});
+
+
+
+      const leftUpButton = document.getElementById("left-up");
+      const leftLeftButton = document.getElementById("left-left");
+      const leftRightButton = document.getElementById("left-right");
+      const leftDownButton = document.getElementById("left-down");
+
+      const rightUpButton = document.getElementById("right-up");
+      const rightLeftButton = document.getElementById("right-left");
+      const rightRightButton = document.getElementById("right-right");
+      const rightDownButton = document.getElementById("right-down");
+
+      const activeIntervals = new Set();
+
+      function setupButton(buttonElement, action) {
+        let intervalId;
+        
+        const startAction = (event) => {
+          event.preventDefault();
+          if (!intervalId) {
+            intervalId = setInterval(action, 16); // 60fps timing
+            activeIntervals.add(intervalId);
+          }
+        };
+
+        const stopAction = () => {
+          if (intervalId) {
+            clearInterval(intervalId);
+            activeIntervals.delete(intervalId);
+            intervalId = null;
+          }
+        };
+
+        buttonElement.addEventListener("mousedown", startAction);
+        buttonElement.addEventListener("mouseup", stopAction);
+        buttonElement.addEventListener("mouseleave", stopAction);
+        
+        buttonElement.addEventListener("touchstart", startAction);
+        buttonElement.addEventListener("touchend", stopAction);
+        buttonElement.addEventListener("touchcancel", stopAction);
+      }
+
+      setupButton(leftUpButton, () => map.panBy([0, -BUTTON_PAN_SPEED * getSpeedMultiplier()], { animate: false }));
+      setupButton(leftDownButton, () => map.panBy([0, BUTTON_PAN_SPEED * getSpeedMultiplier()], { animate: false }));
+      setupButton(leftLeftButton, () => map.panBy([-BUTTON_PAN_SPEED * getSpeedMultiplier(), 0], { animate: false }));
+      setupButton(leftRightButton, () => map.panBy([BUTTON_PAN_SPEED * getSpeedMultiplier(), 0], { animate: false }));
+
+      setupButton(rightUpButton, () => map.setZoom(map.getZoom() + BUTTON_ZOOM_SPEED * getSpeedMultiplier()));
+      setupButton(rightDownButton, () => map.setZoom(map.getZoom() - BUTTON_ZOOM_SPEED * getSpeedMultiplier()));
+
+      setupButton(rightLeftButton, () => map.setBearing(map.getBearing() - MOVE_SPEED * getSpeedMultiplier()));
+      setupButton(rightRightButton, () => map.setBearing(map.getBearing() + MOVE_SPEED * getSpeedMultiplier()));
+
+      setupButton(document.getElementById("zoom-in"), () => map.setPitch(map.getPitch() + 1 * getSpeedMultiplier()));
+      setupButton(document.getElementById("zoom-out"), () => map.setPitch(map.getPitch() - 1 * getSpeedMultiplier()));
+
+      window.addEventListener("beforeunload", () => {
+        activeIntervals.forEach(interval => clearInterval(interval));
+        activeIntervals.clear();
+      });
+
+      document.getElementById("toggle-controls-btn").addEventListener("click", () => {
+        const zoomControls = document.getElementById("zoom-controls");
+        const leftDpad = document.getElementById("left-dpad");
+        const rightDpad = document.getElementById("right-dpad");
+
+        const isVisible = zoomControls.style.display === "flex";
+
+        zoomControls.style.display = isVisible ? "none" : "flex";
+        leftDpad.style.display = isVisible ? "none" : "grid";
+        rightDpad.style.display = isVisible ? "none" : "grid";
+      });
+
+      // Add this function to load the initial topic
+      async function loadInitialTopic() {
+        try {
+          const topicId = "0.0.8312547";
+          document.getElementById("input-field").value = topicId;
+          
+          // Trigger the submit button click programmatically
+          document.getElementById("submit-button").click();
+        } catch (error) {
+          console.error("Error loading initial topic:", error);
+        }
+      }
+
+      // Call loadInitialTopic after map initialization
+      map.on('load', () => {
+        loadInitialTopic();
+      });
+
+      // Add event listeners for the new buttons
+      document.getElementById("button1").addEventListener("click", async (event) => {
+        event.stopPropagation();
+        const inputValue = document.getElementById("toolbar-input").value;
+        
+        try {
+          const topicId = "0.0.8324579";
+          const cleanUrl = inputValue.replace(/\?network=mainnet$/, "");
+
+          const messageData = {
+            data: {
+              urls: [cleanUrl],
+            },
+          };
+          const message = JSON.stringify(messageData);
+
+          const receipt = await window.HashinalsWalletConnectSDK.submitMessageToTopic(
+            topicId,
+            message
+          );
+          console.log("Profile picture updated successfully:", receipt);
+          
+          document.getElementById("toolbar-input").value = "";
+          
+        } catch (error) {
+          console.error("Error updating profile picture:", error);
+          // Removed alert
+        }
+      });
+
+      document.getElementById("button2").addEventListener("click", async (event) => {
+        event.stopPropagation();
+        const inputValue = document.getElementById("toolbar-input").value;
+        
+        try {
+          const topicId = "0.0.8337931";
+          
+          const messageData = {
+            data: {
+              username: inputValue,
+            },
+          };
+          const message = JSON.stringify(messageData);
+
+          const receipt = await window.HashinalsWalletConnectSDK.submitMessageToTopic(
+            topicId,
+            message
+          );
+          console.log("Username updated successfully:", receipt);
+          
+          document.getElementById("toolbar-input").value = "";
+          
+        } catch (error) {
+          console.error("Error updating username:", error);
+          // Removed alert
+        }
+      });
+
+
+      document.addEventListener('touchstart', (event) => {
+        if (event.touches.length > 1) {
+          event.preventDefault();
+        }
+      }, { passive: false });
+
+      let lastTouchEnd = 0;
+      document.addEventListener('touchend', (event) => {
+        const now = (new Date()).getTime();
+        if (now - lastTouchEnd <= 300) {
+          event.preventDefault();
+        }
+        lastTouchEnd = now;
+      }, { passive: false });
+      
+      // Prevent zoom on input focus for iOS
+      document.addEventListener('gesturestart', (event) => {
+        event.preventDefault();
+      }, { passive: false });
+
+
+function closeOptions() {
+  const toggleControlsBtn = document.getElementById("toggle-controls-btn");
+  const toggleToolbarBtn = document.getElementById("toggle-toolbar-btn");
+  const mainToggleBtn = document.getElementById("main-toggle-btn");
+  const toolbar = document.getElementById("toolbar");
+  const toggleRotationControlsBtn = document.getElementById("toggle-rotation-controls-btn");
+  const rotationControls = document.getElementById("rotation-controls");
+
+  // Hide the toggle buttons and show the main button
+  toggleControlsBtn.style.display = "none";
+  toggleToolbarBtn.style.display = "none";
+  toggleRotationControlsBtn.style.display = "none"; // Hide rotation controls button
+  rotationControls.style.display = "none"; // Hide rotation controls
+
+  // Hide the toolbar
+  toolbar.style.display = "none";
+  mainToggleBtn.style.display = "block"; // Show the main button
+
+  // Close all input toolbars
+  const inputToolbars = [
+    "input-toolbar",
+    "input-toolbar-column2",
+    "input-toolbar-column3",
+    "input-toolbar-column5"
+  ];
+  
+  inputToolbars.forEach(toolbarId => {
+    const inputToolbar = document.getElementById(toolbarId);
+    if (inputToolbar) {
+      inputToolbar.style.display = "none"; // Hide each input toolbar
+    }
+  });
+}
+
+document.getElementById("main-toggle-btn").addEventListener("click", function(e) {
+  e.preventDefault();
+  e.stopPropagation();
+  
+  // Close the toolbar and object button if they are open
+  closeOptions();
+
+  // Reset the toolbar state
+  isToolbarOpen = false; // Ensure the toolbar state is reset
+
+  // Show the toggle buttons and hide the main button
+  document.getElementById("toggle-controls-btn").style.display = "block";
+  document.getElementById("toggle-toolbar-btn").style.display = "block";
+  document.getElementById("toggle-rotation-controls-btn").style.display = "block"; // Show rotation controls button
+  this.style.display = "none"; // Hide the main button
+
+  return false; // Prevent any other handlers
+});
+
+// Event listener for the control buttons to hide them and show the main toggle button
+const controlButtons = [
+  "toggle-controls-btn",
+  "toggle-toolbar-btn",
+  "toggle-rotation-controls-btn"
+];
+
+controlButtons.forEach(buttonId => {
+  document.getElementById(buttonId).addEventListener("click", function(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    
+    // Hide the control buttons and show the main toggle button
+    controlButtons.forEach(id => {
+      document.getElementById(id).style.display = "none"; // Hide all control buttons
+    });
+    document.getElementById("main-toggle-btn").style.display = "block"; // Show the main button
+  });
+});
+
+// Ensure the object button is hidden initially
+document.getElementById("toggle-rotation-controls-btn").style.display = "none"; // Hide initially
+
+// Add event listener for the rotation controls toggle button
+document.getElementById("toggle-rotation-controls-btn").addEventListener("click", function(e) {
+  e.preventDefault();
+  e.stopPropagation();
+  
+  // Get the rotation controls element
+  const rotationControls = document.getElementById("rotation-controls");
+  
+  // Toggle the display of the rotation controls
+  rotationControls.style.display = 
+    rotationControls.style.display === "block" ? "none" : "block"; // Toggle rotation controls
+});
+
+// Add a document click listener to close options when clicking outside
+document.addEventListener("click", function(event) {
+  const toggleControlsBtn = document.getElementById("toggle-controls-btn");
+  const toggleToolbarBtn = document.getElementById("toggle-toolbar-btn");
+  const mainToggleBtn = document.getElementById("main-toggle-btn");
+  const toolbar = document.getElementById("toolbar");
+  const rotationControls = document.getElementById("rotation-controls");
+
+  // Check if the click is outside the toggle buttons, the main button, and the rotation controls
+  if (
+    !toggleControlsBtn.contains(event.target) &&
+    !toggleToolbarBtn.contains(event.target) &&
+    !mainToggleBtn.contains(event.target) &&
+    !toolbar.contains(event.target) &&
+    !rotationControls.contains(event.target) // Check if click is outside rotation controls
+  ) {
+    closeOptions(); // Close all options including rotation controls
+  }
+});
+
+// Modify the existing toggle buttons to also hide themselves and show the main button
+document.getElementById("toggle-controls-btn").addEventListener("click", function(event) {
+    event.stopPropagation();
+    closeOptions(); // Close options after toggling
+});
+
+// Fix the toggle-controls-btn click handler with more aggressive visibility controls
+document.getElementById("toggle-controls-btn").addEventListener("click", function(e) {
+  e.preventDefault();
+  e.stopPropagation();
+  
+  // Get the control elements
+  const zoomControls = document.getElementById("zoom-controls");
+  const leftDpad = document.getElementById("left-dpad");
+  const rightDpad = document.getElementById("right-dpad");
+  
+  // Check if they exist
+  if (!zoomControls || !leftDpad || !rightDpad) {
+    console.error("Control elements not found:", {zoomControls, leftDpad, rightDpad});
+    return false;
+  }
+  
+  // Log current visibility state
+  const isVisible = getComputedStyle(zoomControls).display !== "none";
+  console.log("Controls computed visibility before toggle:", isVisible);
+  console.log("Current styles:", {
+    zoom: getComputedStyle(zoomControls).display,
+    left: getComputedStyle(leftDpad).display,
+    right: getComputedStyle(rightDpad).display
+  });
+  
+  // Toggle visibility with !important to override other styles
+  if (isVisible) {
+    // Hide controls
+    zoomControls.setAttribute("style", "display: none !important");
+    leftDpad.setAttribute("style", "display: none !important");
+    rightDpad.setAttribute("style", "display: none !important");
+    console.log("Controls should now be hidden");
+  } else {
+    // Show controls with high z-index and forced visibility
+    zoomControls.setAttribute("style", "display: flex !important; z-index: 2000 !important; opacity: 1 !important; visibility: visible !important;");
+    leftDpad.setAttribute("style", "display: grid !important; z-index: 2000 !important; opacity: 1 !important; visibility: visible !important;");
+    rightDpad.setAttribute("style", "display: grid !important; z-index: 2000 !important; opacity: 1 !important; visibility: visible !important;");
+    console.log("Controls should now be visible with forced styling");
+    
+    // Also make sure any parent containers are visible
+    let parent = zoomControls.parentElement;
+    while (parent && parent !== document.body) {
+      if (getComputedStyle(parent).display === "none") {
+        parent.style.display = "block";
+      }
+      parent = parent.parentElement;
+    }
+  }
+  
+  // Hide both toggle buttons and show the main button
+  document.getElementById("toggle-controls-btn").style.display = "none";
+  newToggleBtn.style.display = "none";
+  document.getElementById("main-toggle-btn").style.display = "block";
+  
+  return false;
+});
+
+// Make sure each toggle button correctly hides itself and shows the main button when clicked
+document.getElementById("toggle-controls-btn").addEventListener("click", function(e) {
+  e.preventDefault();
+  e.stopPropagation();
+  
+  // Do its primary function (toggle controls)
+  const zoomControls = document.getElementById("zoom-controls");
+  const leftDpad = document.getElementById("left-dpad");
+  const rightDpad = document.getElementById("right-dpad");
+  
+  const isVisible = zoomControls.style.display === "flex";
+  console.log("Controls visibility before toggle:", isVisible);
+  
+  // Toggle visibility state
+  if (isVisible) {
+    zoomControls.style.display = "none";
+    leftDpad.style.display = "none";
+    rightDpad.style.display = "none";
+    console.log("Controls should now be hidden");
+  } else {
+    zoomControls.style.display = "flex";
+    leftDpad.style.display = "grid";
+    rightDpad.style.display = "grid";
+    console.log("Controls should now be visible");
+  }
+  
+  // Hide both toggle buttons and show the main button
+  document.getElementById("toggle-controls-btn").style.display = "none";
+  newToggleBtn.style.display = "none";
+  document.getElementById("main-toggle-btn").style.display = "block";
+  
+  return false;
+});
+
+// Replace any existing toolbar toggle functionality
+const toolbar = document.getElementById("toolbar");
+
+// Store the original display style
+const originalToolbarStyle = toolbar.style.display;
+
+// Create and inject a completely new button
+const newToggleBtn = document.createElement("button");
+newToggleBtn.textContent = "Toggle Toolbar";
+newToggleBtn.style.cssText = `
+  position: fixed;
+  top: 11vh;
+  left: 0;
+  z-index: 1010; /* Higher z-index to ensure visibility */
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 0.8vh 1vw;
+  border-radius: 0.8vh;
+  cursor: pointer;
+  font-size: 1.5vh;
+  display: none;
+`;
+
+// Insert it after the original button
+const originalToggleBtn = document.getElementById("toggle-toolbar-btn");
+if (originalToggleBtn && originalToggleBtn.parentNode) {
+  originalToggleBtn.parentNode.insertBefore(newToggleBtn, originalToggleBtn.nextSibling);
+  originalToggleBtn.style.display = "none"; // Hide the original button
+}
+
+// Add a clean click handler to the new button
+newToggleBtn.addEventListener("click", function(e) {
+  e.preventDefault();
+  e.stopPropagation();
+  
+  // Toggle state
+  isToolbarOpen = !isToolbarOpen;
+  
+  // Force display style after a slight delay (to avoid race conditions)
+  setTimeout(() => {
+    toolbar.style.display = isToolbarOpen ? "flex" : "none";
+    console.log("Toolbar visibility forcibly set to:", isToolbarOpen);
+  }, 10);
+  
+  // Hide the toggle buttons and show the main button
+  document.getElementById("toggle-controls-btn").style.display = "none";
+  newToggleBtn.style.display = "none";
+  document.getElementById("main-toggle-btn").style.display = "block";
+  
+  return false; // Prevent any other handlers
+});
+
+// Make sure the toolbar starts hidden
+window.addEventListener("load", function() {
+  toolbar.style.display = "none";
+  isToolbarOpen = false;
+});
+
+// Adjust the styles for each input toolbar to make them bigger
+const inputToolbars = [
+  "input-toolbar",
+  "input-toolbar-column2",
+  "input-toolbar-column3",
+  "input-toolbar-column5"
+];
+
+inputToolbars.forEach(toolbarId => {
+  const toolbar = document.getElementById(toolbarId);
+  const mainToolbar = document.getElementById("toolbar");
+  if (toolbar && mainToolbar) {
+    toolbar.style.width = "50vw"; // Keep width at 50vw
+    toolbar.style.height = `${mainToolbar.offsetHeight}px`; // Match height to the toolbar
+    toolbar.style.padding = "0"; // Remove padding
+
+    // Make input boxes inside the toolbar bigger
+    const inputs = toolbar.querySelectorAll('input, textarea');
+    inputs.forEach(input => {
+      input.style.width = "95%"; // Increase width to fill the toolbar
+      input.style.height = "5vh"; // Increase height for better visibility
+      input.style.fontSize = "2vh"; // Increase font size for readability
+      input.style.marginBottom = "1vh"; // Add some space between inputs
+    });
+  }
+});
+
+document.addEventListener("click", (event) => {
+  const toggleControlsBtn = document.getElementById("toggle-controls-btn");
+  const toggleToolbarBtn = document.getElementById("toggle-toolbar-btn");
+  const mainToggleBtn = document.getElementById("main-toggle-btn");
+  const toolbar = document.getElementById("toolbar");
+
+  // Check if the click is outside the toggle buttons and the toolbar
+  if (
+    !toggleControlsBtn.contains(event.target) &&
+    !toggleToolbarBtn.contains(event.target) &&
+    !mainToggleBtn.contains(event.target) &&
+    !toolbar.contains(event.target)
+  ) {
+    // Hide the toggle buttons
+    toggleControlsBtn.style.display = "none";
+    toggleToolbarBtn.style.display = "none";
+
+    // Show only the main "Options" button
+    mainToggleBtn.style.display = "block";
+
+    // Hide the toolbar
+    toolbar.style.display = "none";
+  }
+});
+
+// Ensure the toolbar toggle button also toggles the toolbar visibility
+document.getElementById("toggle-toolbar-btn").addEventListener("click", (event) => {
+  event.stopPropagation(); // Prevent the click from reaching the document listener
+  const toolbar = document.getElementById("toolbar");
+  toolbar.style.display = toolbar.style.display === "none" ? "flex" : "none";
+});
+
+// Add a document click listener to close options when clicking outside
+document.addEventListener("click", function(event) {
+  const toggleControlsBtn = document.getElementById("toggle-controls-btn");
+  const toggleToolbarBtn = document.getElementById("toggle-toolbar-btn");
+  const mainToggleBtn = document.getElementById("main-toggle-btn");
+
+  // Check if the click is outside the toggle buttons and the main button
+  if (
+    !toggleControlsBtn.contains(event.target) &&
+    !toggleToolbarBtn.contains(event.target) &&
+    !mainToggleBtn.contains(event.target)
+  ) {
+    // Hide the toggle buttons
+    toggleControlsBtn.style.display = "none";
+    toggleToolbarBtn.style.display = "none";
+
+    // Show only the main "Options" button
+    mainToggleBtn.style.display = "block";
+  }
+});
+
+// Add this code to your existing script section
+document.getElementById("color-red").addEventListener("input", (event) => {
+    const value = event.target.value;
+    document.getElementById("color-red-value").textContent = value; // Update displayed value
+    updateColor(); // Call function to update color immediately
+});
+
+document.getElementById("color-green").addEventListener("input", (event) => {
+    const value = event.target.value;
+    document.getElementById("color-green-value").textContent = value; // Update displayed value
+    updateColor(); // Call function to update color immediately
+});
+
+document.getElementById("color-blue").addEventListener("input", (event) => {
+    const value = event.target.value;
+    document.getElementById("color-blue-value").textContent = value; // Update displayed value
+    updateColor(); // Call function to update color immediately
+});
+
+// Function to update the color based on slider values
+function updateColor() {
+    const red = document.getElementById("color-red").value;
+    const green = document.getElementById("color-green").value;
+    const blue = document.getElementById("color-blue").value;
+
+    // Construct the RGB color string
+    const color = `rgb(${red}, ${green}, ${blue})`;
+
+    // Change the color of the crosshair
+    const crosshair = document.getElementById("crosshair");
+    if (crosshair) {
+        crosshair.style.setProperty('--crosshair-color', color);
+    }
+}
+
+function updateCrosshairBeforeAfter(value) {
+    const crosshair = document.getElementById("crosshair");
+    crosshair.style.setProperty('--crosshair-before-width', `${value}px`); // Width of ::before
+    crosshair.style.setProperty('--crosshair-after-height', `${value}px`); // Height of ::after
+}
+
+function updateCrosshairAfterBefore(value) {
+    const crosshair = document.getElementById("crosshair");
+    crosshair.style.setProperty('--crosshair-after-width', `${value}px`); // Width of ::after
+    crosshair.style.setProperty('--crosshair-before-height', `${value}px`); // Height of ::before
+}
+
+document.getElementById("crosshair-before-after").addEventListener("input", (event) => {
+    const value = event.target.value;
+    document.getElementById("crosshair-before-after-value").textContent = value;
+    updateCrosshairBeforeAfter(value);
+});
+
+document.getElementById("crosshair-after-before").addEventListener("input", (event) => {
+    const value = event.target.value;
+    document.getElementById("crosshair-after-before-value").textContent = value;
+    updateCrosshairAfterBefore(value);
+});
+
+
+            // Add event listeners for the new buttons
+            document.getElementById("buttonforobject").addEventListener("click", async (event) => {
+        event.stopPropagation();
+        const inputValue = document.getElementById("object-input").value;
+        
+        try {
+          const topicId = "0.0.8411947";
+          const cleanUrl = inputValue.replace(/\?network=mainnet$/, "");
+
+          const messageData = {
+            data: {
+              urls: [cleanUrl],
+            },
+          };
+          const message = JSON.stringify(messageData);
+
+          const receipt = await window.HashinalsWalletConnectSDK.submitMessageToTopic(
+            topicId,
+            message
+          );
+          console.log("Profile picture updated successfully:", receipt);
+          
+          document.getElementById("object-input").value = "";
+          
+        } catch (error) {
+          console.error("Error updating profile picture:", error);
+          // Removed alert
+        }
+      });
+
+
+
+      async function loadProfileObject() {
+        
+        const topicId = "0.0.8411947";
+        const accountObjectUrl = []; // Initialize an empty array to store account URLs
+        try {
+            const result = await window.HashinalsWalletConnectSDK.getMessages(topicId);
+
+            // Check if result exists and has messages
+            if (!result || !Array.isArray(result.messages)) {
+                console.log("No profile object found, using defaults");
+            }
+
+            // Process all messages to build the accountObjectUrl array
+            result.messages.forEach(message => {
+                if (message.payer && message.data && message.data.urls && message.data.urls.length > 0) {
+                    // Check if the message payer matches the globalAccountId
+                    if (message.payer === globalAccountId) {
+                        // Store the URL for this account
+                        accountObjectUrl.push(message.data.urls[0]); // Accessing the first URL
+                    }
+                }
+            });
+
+            return accountObjectUrl; // Return the populated array
+
+        } catch (error) {
+            console.log("Error in loadProfileObject:", error);
+            return []; // Return empty array instead of throwing error
+        }
+      }
+      loadProfileObject();
+
+
+const ufoLoader = new THREE.GLTFLoader(); // Create a GLTFLoader instance
+
+// Load the GLTF model
+ufoLoader.load('https://kiloscribe.com/api/inscription-cdn/0.0.8392276?network=mainnet', (gltf) => { // Replace 'URL_TO_YOUR_GTLF_MODEL' with the actual URL
+    const ufoModel = gltf.scene; // Get the loaded model
+    scene.add(ufoModel); // Add the model to the scene
+    // Set the initial position, rotation, and scale of the model
+    ufoModel.position.set(0, -3, -8); // Set the initial position of the model
+    ufoModel.rotation.set(THREE.MathUtils.degToRad(0), THREE.MathUtils.degToRad(90), THREE.MathUtils.degToRad(45)); // Set the rotation of the model
+    const scaleFactor = 20; // Scale factor for the model
+    ufoModel.scale.set(scaleFactor, scaleFactor, scaleFactor); // Scale the model uniformly
+
+    // Add event listeners for rotation sliders
+    document.getElementById("rotation-x").addEventListener("input", (event) => {
+        const value = event.target.value;
+        document.getElementById("rotation-x-value").textContent = value; // Update displayed value
+        ufoModel.rotation.x = THREE.MathUtils.degToRad(value); // Convert degrees to radians
+    });
+
+    document.getElementById("rotation-y").addEventListener("input", (event) => {
+        const value = event.target.value;
+        document.getElementById("rotation-y-value").textContent = value; // Update displayed value
+        ufoModel.rotation.y = THREE.MathUtils.degToRad(value); // Convert degrees to radians
+    });
+
+    document.getElementById("rotation-z").addEventListener("input", (event) => {
+        const value = event.target.value;
+        document.getElementById("rotation-z-value").textContent = value; // Update displayed value
+        ufoModel.rotation.z = THREE.MathUtils.degToRad(value); // Convert degrees to radians
+    });
+
+    // Add event listeners for position sliders
+    document.getElementById("position-x").addEventListener("input", (event) => {
+        const value = event.target.value;
+        document.getElementById("position-x-value").textContent = value; // Update displayed value
+        ufoModel.position.x = parseFloat(value); // Update the x position of the model
+    });
+
+    document.getElementById("position-y").addEventListener("input", (event) => {
+        const value = event.target.value;
+        document.getElementById("position-y-value").textContent = value; // Update displayed value
+        ufoModel.position.y = parseFloat(value); // Update the y position of the model
+    });
+
+    // Add Z position slider
+    document.getElementById("position-z").addEventListener("input", (event) => {
+        const value = event.target.value;
+        document.getElementById("position-z-value").textContent = value; // Update displayed value
+        ufoModel.position.z = parseFloat(value); // Update the z position of the model
+    });
+
+    // Add scale factor slider
+    document.getElementById("scale-factor").addEventListener("input", (event) => {
+        const value = event.target.value;
+        document.getElementById("scale-factor-value").textContent = value; // Update displayed value
+        const scaleFactor = parseFloat(value); // Get the scale factor
+        ufoModel.scale.set(scaleFactor, scaleFactor, scaleFactor); // Scale the model uniformly
+    });
+}, undefined, (error) => {
+    console.error('An error occurred while loading the GLTF model:', error);
+});
+
+
+}
+
+
+    
+    </script>
+  <script src="script.js"></script>
+  </body>
+</html>

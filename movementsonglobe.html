@@ -878,14 +878,12 @@ onclick="event.stopPropagation();"
             "block";
           document.getElementById("crosshair").style.display = "block";
           globalAccountId = accountId; // Assign accountId to the external variable
-          console.log("Account ID set:", globalAccountId); // Log when it's set
                       // Call loadProfileObject after globalAccountId is set
                       const profileObjectUrl = await loadProfileObject();
 
                       const profileObjectCrosshair = await loadProfileCrosshair();
 
                       const profileObjectSettings = await loadProfileSettings();
-            console.log("Profile Object Settings:", profileObjectSettings); // Log the result 
 
                 await loadUfoModel(profileObjectSettings[0].urls[0]); // Load the model from the first object's URL
         }
@@ -1136,7 +1134,6 @@ document.getElementById("submit-button").addEventListener("click", async () => {
             // Validate the coordinate string format
             const validCoordPattern = /^\[-?\d+\.?\d*,\s*-?\d+\.?\d*\](,\s*\[-?\d+\.?\d*,\s*-?\d+\.?\d*\])*$/
             if (!validCoordPattern.test(cordStr)) {
-              console.error("Invalid coordinate format:", cordStr);
               return; // Skip processing this message
             }
 
@@ -3310,19 +3307,12 @@ async function loadUfoModel(modelUrl) {
         const rotationZInDegrees = THREE.MathUtils.radToDeg(ufoModel.rotation.z);
 
         document.getElementById("rotation-x").value = Math.round(rotationXInDegrees); // Round to nearest integer
-        console.log('rotation x: ' + Math.round(rotationXInDegrees)); // Log rounded value
         document.getElementById("rotation-y").value = Math.round(rotationYInDegrees); // Round to nearest integer
-        console.log('rotation y: ' + Math.round(rotationYInDegrees)); // Log rounded value
         document.getElementById("rotation-z").value = Math.round(rotationZInDegrees); // Round to nearest integer
-        console.log('rotation z: ' + Math.round(rotationZInDegrees)); // Log rounded value
-
 
         document.getElementById("rotation-x-value").value = Math.round(rotationXInDegrees);
-        console.log('rotation x: ' + Math.round(rotationXInDegrees)); // Log rounded value
         document.getElementById("rotation-y-value").value = Math.round(rotationYInDegrees);
-        console.log('rotation y: ' + Math.round(rotationYInDegrees)); // Log rounded value
         document.getElementById("rotation-z-value").value = Math.round(rotationZInDegrees);
-        console.log('rotation z: ' + rotationZInDegrees.toFixed(3)); // Log to three decimal places
         document.getElementById("scale-factor-value").value = ufoModel.scale.x;
 
 

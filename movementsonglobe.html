@@ -459,7 +459,7 @@ data-script-id="map css"
         style="margin-right: 10px; background-color: rgba(0, 0, 0, 0.8); color: white;"
         onclick="event.stopPropagation();"
       />
-      <button id="submit-button">Submit</button>
+      <button id="submit-button" style="display: block; width: 100%">Submit</button>
     </div>
 
     <div
@@ -595,7 +595,7 @@ onclick="event.stopPropagation();"
         readonly
         onclick="event.stopPropagation();"
       />
-      <button id="submit-button-column5">Submit</button>
+      <button id="submit-button-column5" style="display: block; width: 100%">Submit</button>
     </div>
 
     <div class="flex-container">
@@ -656,7 +656,7 @@ onclick="event.stopPropagation();"
 
     <button id="toggle-toolbar-btn" style="
       position: fixed;
-      top: 11vh;
+      top: 15.5vh;
       left: 0;
       z-index: 1006;
       background-color: #007bff;
@@ -684,90 +684,93 @@ onclick="event.stopPropagation();"
     ">Options</button>
 
     <div id="rotation-controls" style="display: none; position: fixed; top: 10.1vh; z-index: 1007; background-color: rgba(0, 0, 0, 0.8); padding: 10px; border-radius: 4px; color: white; width: 100vw;">
-        <div style="width: 50vw; float: left;">
-          <input 
-          type="text" 
-          id="object-input"
-          placeholder="Enter URL"
-          style="
-              background-color: rgba(0, 0, 0, 0.8);
-              color: white;
-              padding: 0vh 0vw;
-              border: 0.1vh solid white;
-              border-radius: 1vh;
-              font-size: 2vw;
-              width: 45vw;
-              box-sizing: border-box;
-          "
-          onclick="event.stopPropagation();"
-          />
-            <div style="display: flex; align-items: center;">
+      <input 
+      type="text" 
+      id="object-input"
+      placeholder="Enter URL"
+      style="
+          background-color: rgba(0, 0, 0, 0.8);
+          color: white;
+          padding: 0vh 0vw;
+          border: 0.1vh solid white;
+          border-radius: 1vh;
+          font-size: 2vw;
+          width: 95vw;
+          box-sizing: border-box;
+          margin-bottom: 1vh;
+      "
+      onclick="event.stopPropagation();"
+      />
+        <!-- Add this event listener to prevent closing when interacting with rotation controls -->
+        <div style="width: 50vw; float: left;" onclick="event.stopPropagation();"> 
+            <div style="display: flex; align-items: center;"> <!-- Added padding-top -->
                 <label for="rotation-x" style="width: 100px;">Rotation X:</label>
-                <input type="range" id="rotation-x" min="0" max="360" value="0" style="width: 35vw;" /> <!-- Updated to 35vw -->
-                <span id="rotation-x-value" style="margin-left: 10px;">0</span>
+                <input type="range" id="rotation-x" min="0" max="360" value="0" style="width: 35vw;" />
+                <input type="number" id="rotation-x-value" style="margin-left: 10px; width: 40px;" value="0" onchange="document.getElementById('rotation-x').value = this.value;" />
             </div>
             <div style="display: flex; align-items: center;">
                 <label for="rotation-y" style="width: 100px;">Rotation Y:</label>
-                <input type="range" id="rotation-y" min="0" max="360" value="0" style="width: 35vw;" /> <!-- Updated to 35vw -->
-                <span id="rotation-y-value" style="margin-left: 10px;">0</span>
+                <input type="range" id="rotation-y" min="0" max="360" value="0" style="width: 35vw;" />
+                <input type="number" id="rotation-y-value" style="margin-left: 10px; width: 40px;" value="0" onchange="document.getElementById('rotation-y').value = this.value;" />
             </div>
             <div style="display: flex; align-items: center;">
                 <label for="rotation-z" style="width: 100px;">Rotation Z:</label>
-                <input type="range" id="rotation-z" min="0" max="360" value="0" style="width: 35vw;" /> <!-- Updated to 35vw -->
-                <span id="rotation-z-value" style="margin-left: 10px;">0</span>
+                <input type="range" id="rotation-z" min="0" max="360" value="0" style="width: 35vw;" />
+                <input type="number" id="rotation-z-value" style="margin-left: 10px; width: 40px;" value="0" onchange="document.getElementById('rotation-z').value = this.value;" />
             </div>
             <div style="display: flex; align-items: center;">
                 <label for="position-x" style="width: 100px;">Position X:</label>
-                <input type="range" id="position-x" min="-100" max="100" step="0.1" value="0" style="width: 35vw;" /> <!-- Updated to 35vw -->
-                <span id="position-x-value" style="margin-left: 10px;">0</span>
+                <input type="range" id="position-x" min="-100" max="100" step="0.1" value="0" style="width: 35vw;" />
+                <input type="number" id="position-x-value" style="margin-left: 10px; width: 40px;" value="0" onchange="document.getElementById('position-x').value = this.value;" />
             </div>
             <div style="display: flex; align-items: center;">
                 <label for="position-y" style="width: 100px;">Position Y:</label>
-                <input type="range" id="position-y" min="-100" max="100" step="0.1" value="0" style="width: 35vw;" /> <!-- Updated to 35vw -->
-                <span id="position-y-value" style="margin-left: 10px;">0</span>
+                <input type="range" id="position-y" min="-100" max="100" step="0.1" value="0" style="width: 35vw;" />
+                <input type="number" id="position-y-value" style="margin-left: 10px; width: 40px;" value="0" onchange="document.getElementById('position-y').value = this.value;" />
             </div>
             <div style="display: flex; align-items: center;">
                 <label for="position-z" style="width: 100px;">Position Z:</label>
-                <input type="range" id="position-z" min="-100" max="100" step="0.1" value="0" style="width: 35vw;" /> <!-- Updated to 35vw -->
-                <span id="position-z-value" style="margin-left: 10px;">0</span>
+                <input type="range" id="position-z" min="-100" max="100" step="0.1" value="0" style="width: 35vw;" />
+                <input type="number" id="position-z-value" style="margin-left: 10px; width: 40px;" value="0" onchange="document.getElementById('position-z').value = this.value;" />
             </div>
             <div style="display: flex; align-items: center;">
                 <label for="scale-factor" style="width: 100px;">Scale Factor:</label>
-                <input type="range" id="scale-factor" min="0.1" max="100" step="0.1" value="1" style="width: 35vw;" /> <!-- Updated to 35vw -->
-                <span id="scale-factor-value" style="margin-left: 10px;">1</span>
+                <input type="range" id="scale-factor" step="0.000001" value="1" style="width: 25vw;" />
+                <input type="number" id="scale-factor-value" style="margin-left: auto; width: 10vw;" value="1" onchange="document.getElementById('scale-factor').value = this.value;" />
             </div>
+            <div class="toolbar-column" id="savesettings" style="width: 45vw;">Save settings</div>
         </div>
 
         <!-- New Color Sliders -->
-        <div style="width: 50vw; float: left; margin-top: -0.5vh;"> <!-- Adjusted margin-top -->
+        <div style="width: 50vw; float: left; margin-top: -0.5vh;" onclick="event.stopPropagation();"> <!-- Adjusted margin-top -->
           <div class="toolbar-column" id="buttonforobject" style="width: 45vw;">Change object</div>
             <div style="display: flex; align-items: center;">
                 <label for="color-red" style="width: 100px;">Red:</label>
-                <input type="range" id="color-red" min="0" max="255" value="255" style="width: 35vw;" /> <!-- Updated to 35vw -->
-                <span id="color-red-value" style="margin-left: 10px;">255</span>
+                <input type="range" id="color-red" min="0" max="255" value="255" style="width: 35vw;" />
+                <input type="number" id="color-red-value" style="margin-left: 10px; width: 40px;" value="255" onchange="document.getElementById('color-red').value = this.value;" />
             </div>
             <div style="display: flex; align-items: center;">
                 <label for="color-green" style="width: 100px;">Green:</label>
-                <input type="range" id="color-green" min="0" max="255" value="255" style="width: 35vw;" /> <!-- Updated to 35vw -->
-                <span id="color-green-value" style="margin-left: 10px;">255</span>
+                <input type="range" id="color-green" min="0" max="255" value="255" style="width: 35vw;" />
+                <input type="number" id="color-green-value" style="margin-left: 10px; width: 40px;" value="255" onchange="document.getElementById('color-green').value = this.value;" />
             </div>
             <div style="display: flex; align-items: center;">
                 <label for="color-blue" style="width: 100px;">Blue:</label>
-                <input type="range" id="color-blue" min="0" max="255" value="255" style="width: 35vw;" /> <!-- Updated to 35vw -->
-                <span id="color-blue-value" style="margin-left: 10px;">255</span>
+                <input type="range" id="color-blue" min="0" max="255" value="255" style="width: 35vw;" />
+                <input type="number" id="color-blue-value" style="margin-left: 10px; width: 40px;" value="255" onchange="document.getElementById('color-blue').value = this.value;" />
             </div>
             <!-- New Sliders for Crosshair -->
             <div style="display: flex; align-items: center;">
                 <label for="crosshair-before-after" style="width: 100px;">Length:</label>
-                <input type="range" id="crosshair-before-after" min="0" max="100" value="20" style="width: 35vw;" /> <!-- Updated to 35vw -->
-                <span id="crosshair-before-after-value" style="margin-left: 10px;">20</span>
+                <input type="range" id="crosshair-before-after" min="0" max="100" value="20" style="width: 35vw;" />
+                <input type="number" id="crosshair-before-after-value" style="margin-left: 10px; width: 40px;" value="20" onchange="document.getElementById('crosshair-before-after').value = this.value;" />
             </div>
             <div style="display: flex; align-items: center;">
                 <label for="crosshair-after-before" style="width: 100px;">Thickness:</label>
-                <input type="range" id="crosshair-after-before" min="0" max="10" value="2" style="width: 35vw;" /> <!-- Updated to 35vw -->
-                <span id="crosshair-after-before-value" style="margin-left: 10px;">2</span>
+                <input type="range" id="crosshair-after-before" min="0" max="10" value="2" style="width: 35vw;" />
+                <input type="number" id="crosshair-after-before-value" style="margin-left: 10px; width: 40px;" value="2" onchange="document.getElementById('crosshair-after-before').value = this.value;" />
             </div>
-            <div class="toolbar-column" id="savesettings" style="width: 45vw;">Save settings</div>
+            <div class="toolbar-column" id="savecrosshair" style="width: 45vw;">Save crosshair</div>
         </div>
     </div>
 
@@ -775,7 +778,7 @@ onclick="event.stopPropagation();"
 
     <button id="toggle-rotation-controls-btn" style="
       position: fixed;
-      top: 15.5vh;
+      top: 20vh;
       left: 0;
       z-index: 1006;
       background-color: #007bff;
@@ -787,6 +790,45 @@ onclick="event.stopPropagation();"
       font-size: 1.5vh;
       display: none; /* Initially hidden */
     ">Object</button>
+
+    <button id="toggle-visibility-controls-btn" style="
+      position: fixed;
+      top: 11vh;
+      left: 0;
+      z-index: 1006;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      padding: 0.8vh 1vw;
+      border-radius: 0.8vh;
+      cursor: pointer;
+      font-size: 1.5vh;
+      display: none; /* Initially hidden */
+    ">Visibility</button>
+
+    <div id="visibility-controls" style="display: none; flex-direction: column; position: fixed; top: 10.1vh; z-index: 1007; background-color: rgba(0, 0, 0, 0.8); padding: 10px; border-radius: 4px; color: white;"> <!-- Changed to display: none -->
+      <div style="display: flex; flex-direction: column; width: auto;"> <!-- Changed to flex and width auto -->
+        <!-- Add this slider for raster opacity control -->
+        <div style="margin: 10px;">
+          <label for="raster-opacity-slider">Raster Opacity:</label>
+          <!-- New div for input and span -->
+          <div style="display: flex; align-items: center; margin-left: -10px;">
+            <input type="range" id="raster-opacity-slider" min="0" max="1" step="0.01" value="1" style="width: 200px;">
+            <span id="raster-opacity-value">1</span>
+          </div>
+        </div>
+        <div style="display: flex; align-items: center; margin-bottom: 10px;"> <!-- Added margin-bottom for spacing -->
+          <button id="toggle-rotation-y" style="width: auto;">Show polygons:</button> <!-- Changed width to auto -->
+          <span id="rotation-y-value" style="margin-left: 10px;">Off</span> <!-- Updated to reflect button state -->
+        </div>
+        <div style="display: flex; align-items: center; margin-bottom: 10px;"> <!-- Added margin-bottom for spacing -->
+          <button id="toggle-rotation-z" style="width: auto;">Show markers</button> <!-- Changed width to auto -->
+          <span id="rotation-z-value" style="margin-left: 10px;">Off</span> <!-- Updated to reflect button state -->
+        </div>
+      </div>
+    </div>
+
+
 
   </body>
 
@@ -839,7 +881,13 @@ onclick="event.stopPropagation();"
           console.log("Account ID set:", globalAccountId); // Log when it's set
                       // Call loadProfileObject after globalAccountId is set
                       const profileObjectUrl = await loadProfileObject();
-            console.log("Profile Object URL:", profileObjectUrl); // Log the result
+
+                      const profileObjectCrosshair = await loadProfileCrosshair();
+
+                      const profileObjectSettings = await loadProfileSettings();
+            console.log("Profile Object Settings:", profileObjectSettings); // Log the result 
+
+                await loadUfoModel(profileObjectSettings[0].urls[0]); // Load the model from the first object's URL
         }
 
         async function connectWallet() {
@@ -1084,26 +1132,21 @@ document.getElementById("submit-button").addEventListener("click", async () => {
           try {
             let coordinates;
             const cordStr = parsedMessage.polygon.data.cord;
-  
-            
-            // Try multiple parsing approaches
-            try {
-              coordinates = JSON.parse(cordStr);
-            } catch {
-              try {
-                const cleanedStr = cordStr
-                  .replace(/\s+/g, '')
-                  .replace(/\]\[/g, '],[')
-                  .replace(/^\[?(.+?)\]?$/, '[$1]');
-                coordinates = JSON.parse(cleanedStr);
-              } catch {
-                const coordPairs = cordStr.match(/\[-?\d+\.?\d*,\s*-?\d+\.?\d*\]/g);
-                if (coordPairs) {
-                  coordinates = coordPairs.map(pair => JSON.parse(pair));
-                }
-              }
+
+            // Validate the coordinate string format
+            const validCoordPattern = /^\[-?\d+\.?\d*,\s*-?\d+\.?\d*\](,\s*\[-?\d+\.?\d*,\s*-?\d+\.?\d*\])*$/
+            if (!validCoordPattern.test(cordStr)) {
+              console.error("Invalid coordinate format:", cordStr);
+              return; // Skip processing this message
             }
 
+            // Try parsing the coordinates
+            try {
+              coordinates = JSON.parse(`[${cordStr}]`); // Wrap in brackets for valid JSON
+            } catch (parseError) {
+              console.error("Error parsing coordinates:", parseError);
+              return; // Skip processing this message
+            }
 
             // Ensure coordinates form a closed polygon
             if (Array.isArray(coordinates) && coordinates.length > 2) {
@@ -1447,23 +1490,22 @@ document.addEventListener("click", (event) => {
   const toggleToolbarBtn = document.getElementById("toggle-toolbar-btn");
   const mainToggleBtn = document.getElementById("main-toggle-btn");
   const toolbar = document.getElementById("toolbar");
+  const toggleVisibilityControlsBtn = document.getElementById("toggle-visibility-controls-btn");
 
-  // Check if the click is outside the toggle buttons and the toolbar
+  // Check if the click is outside the toggle buttons and the main button
   if (
     !toggleControlsBtn.contains(event.target) &&
     !toggleToolbarBtn.contains(event.target) &&
     !mainToggleBtn.contains(event.target) &&
-    !toolbar.contains(event.target)
+    !toolbar.contains(event.target) &&
+    !toggleVisibilityControlsBtn.contains(event.target) // Ensure this line is included
   ) {
     // Hide the toggle buttons
     toggleControlsBtn.style.display = "none";
     toggleToolbarBtn.style.display = "none";
-
+    toggleVisibilityControlsBtn.style.display = "none"; // Hide the visibility controls button
     // Show only the main "Options" button
     mainToggleBtn.style.display = "block";
-
-    // Hide the toolbar
-    toolbar.style.display = "none";
   }
 });
 
@@ -1629,6 +1671,9 @@ document
       const cord3 = document.getElementById("input-field-3-5").value; // BOTTOM RIGHT
       const cord4 = document.getElementById("input-field-3-6").value; // TOP RIGHT
       
+      // Log the coordinates to check their values
+      console.log('Coordinates:', { cord1, cord2, cord3, cord4 });
+
       // Validate and format the coordinates input
       const formattedCord = [
         cord1.split(',').map(Number), // Convert to array of numbers
@@ -1636,10 +1681,20 @@ document
         cord3.split(',').map(Number),
         cord4.split(',').map(Number)
       ];
-      if (formattedCord.some(cord => !cord.match(/^-?\d+(\.\d+)?,-?\d+(\.\d+)?$/))) {
+
+      // Ensure all coordinates are valid numbers
+      const isValid = formattedCord.every(cord => 
+        Array.isArray(cord) && 
+        cord.length === 2 && 
+        cord.every(num => !isNaN(num) && isFinite(num))
+      );
+
+      if (!isValid) {
         throw new Error('Please enter valid coordinates in the format number,number for all four corners.');
       }
-      const cordString = formattedCord.join(','); // Join the valid coordinates
+
+      // Create the desired coordinate string without additional array wrapping
+      const cordString = formattedCord.map(cord => `[${cord.join(',')}]`).join(', '); // Join the valid coordinates
       
       console.log('Submitting message with:', { topicId, title, msg, cord: cordString });
       
@@ -1981,7 +2036,7 @@ function addPolygonWithImageFill(map, polygon) {
         type: 'raster',
         source: sourceId,
         paint: {
-          'raster-opacity': 0.3,
+          'raster-opacity': 1, // Initial value
           'raster-fade-duration': 0,
           'raster-resampling': 'linear', // Can be 'linear' or 'nearest'
           // Adjust brightness, contrast, saturation if needed
@@ -2017,6 +2072,13 @@ function addPolygonWithImageFill(map, polygon) {
           'fill-opacity': 0,
           'fill-outline-color': '#000'
         }
+      });
+
+            // Add an event listener to the opacity slider for this specific layer
+            document.getElementById("raster-opacity-slider").addEventListener("input", (event) => {
+        const opacityValue = event.target.value; // Get the current value of the slider
+        map.setPaintProperty(layerId, 'raster-opacity', parseFloat(opacityValue)); // Update the layer's opacity
+        document.getElementById("raster-opacity-value").textContent = opacityValue; // Update displayed value
       });
 
       // Set the mask
@@ -2234,6 +2296,8 @@ function closeOptions() {
   const toolbar = document.getElementById("toolbar");
   const toggleRotationControlsBtn = document.getElementById("toggle-rotation-controls-btn");
   const rotationControls = document.getElementById("rotation-controls");
+  const toggleVisibilityControlsBtn = document.getElementById("toggle-visibility-controls-btn");
+  const visibilityControls = document.getElementById("visibility-controls"); // Added visibility controls
 
   // Hide the toggle buttons and show the main button
   toggleControlsBtn.style.display = "none";
@@ -2259,6 +2323,9 @@ function closeOptions() {
       inputToolbar.style.display = "none"; // Hide each input toolbar
     }
   });
+
+  // Hide the visibility controls
+  visibilityControls.style.display = "none"; // Added to hide visibility controls
 }
 
 document.getElementById("main-toggle-btn").addEventListener("click", function(e) {
@@ -2277,6 +2344,10 @@ document.getElementById("main-toggle-btn").addEventListener("click", function(e)
   document.getElementById("toggle-rotation-controls-btn").style.display = "block"; // Show rotation controls button
   this.style.display = "none"; // Hide the main button
 
+  // Open the visibility controls
+  const visibilityControlsBtn = document.getElementById("toggle-visibility-controls-btn");
+  visibilityControlsBtn.style.display = "block"; // Show visibility controls
+
   return false; // Prevent any other handlers
 });
 
@@ -2284,7 +2355,8 @@ document.getElementById("main-toggle-btn").addEventListener("click", function(e)
 const controlButtons = [
   "toggle-controls-btn",
   "toggle-toolbar-btn",
-  "toggle-rotation-controls-btn"
+  "toggle-rotation-controls-btn",
+  "toggle-visibility-controls-btn"
 ];
 
 controlButtons.forEach(buttonId => {
@@ -2308,10 +2380,8 @@ document.getElementById("toggle-rotation-controls-btn").addEventListener("click"
   e.preventDefault();
   e.stopPropagation();
   
-  // Get the rotation controls element
-  const rotationControls = document.getElementById("rotation-controls");
-  
   // Toggle the display of the rotation controls
+  const rotationControls = document.getElementById("rotation-controls");
   rotationControls.style.display = 
     rotationControls.style.display === "block" ? "none" : "block"; // Toggle rotation controls
 });
@@ -2322,17 +2392,17 @@ document.addEventListener("click", function(event) {
   const toggleToolbarBtn = document.getElementById("toggle-toolbar-btn");
   const mainToggleBtn = document.getElementById("main-toggle-btn");
   const toolbar = document.getElementById("toolbar");
-  const rotationControls = document.getElementById("rotation-controls");
+  const toggleVisibilityControlsBtn = document.getElementById("toggle-visibility-controls-btn");
 
-  // Check if the click is outside the toggle buttons, the main button, and the rotation controls
+  // Check if the click is outside the toggle buttons and the main button
   if (
     !toggleControlsBtn.contains(event.target) &&
     !toggleToolbarBtn.contains(event.target) &&
     !mainToggleBtn.contains(event.target) &&
     !toolbar.contains(event.target) &&
-    !rotationControls.contains(event.target) // Check if click is outside rotation controls
+    !toggleVisibilityControlsBtn.contains(event.target)
   ) {
-    closeOptions(); // Close all options including rotation controls
+    closeOptions();
   }
 });
 
@@ -2556,38 +2626,138 @@ document.addEventListener("click", function(event) {
   const toggleControlsBtn = document.getElementById("toggle-controls-btn");
   const toggleToolbarBtn = document.getElementById("toggle-toolbar-btn");
   const mainToggleBtn = document.getElementById("main-toggle-btn");
+  const toggleVisibilityControlsBtn = document.getElementById("toggle-visibility-controls-btn");
 
   // Check if the click is outside the toggle buttons and the main button
   if (
     !toggleControlsBtn.contains(event.target) &&
     !toggleToolbarBtn.contains(event.target) &&
-    !mainToggleBtn.contains(event.target)
+    !mainToggleBtn.contains(event.target) &&
+    !toggleVisibilityControlsBtn.contains(event.target)
   ) {
     // Hide the toggle buttons
     toggleControlsBtn.style.display = "none";
     toggleToolbarBtn.style.display = "none";
-
+    toggleVisibilityControlsBtn.style.display = "none"; // Hide the visibility controls button
     // Show only the main "Options" button
     mainToggleBtn.style.display = "block";
   }
 });
 
-// Add this code to your existing script section
+document.getElementById("toggle-visibility-controls-btn").addEventListener("click", function(event) {
+  event.stopPropagation(); // Prevent the click from reaching the document listener
+  const visibilityControls = document.getElementById("visibility-controls");
+  // Toggle visibility controls display
+  visibilityControls.style.display = visibilityControls.style.display === "none" ? "block" : "none";
+});
+
+// Add a click handler to the visibility controls itself to prevent event bubbling
+document.getElementById("visibility-controls").addEventListener("click", function(event) {
+  event.stopPropagation();
+});
+
+// Modify the document click handler to close visibility controls if clicked outside
+document.addEventListener("click", (event) => {
+  const visibilityControls = document.getElementById("visibility-controls");
+  if (!visibilityControls.contains(event.target) && event.target !== document.getElementById("toggle-visibility-controls-btn")) {
+    visibilityControls.style.display = "none";
+  }
+});
+
+
+
+  // Add these variables to manage visibility states
+  let markersVisible = true;
+  let polygonsVisible = true;
+
+  // Function to toggle markers visibility
+  function toggleMarkers() {
+      markersVisible = !markersVisible;
+      existingMarkers.forEach(marker => {
+          // Check if the marker element exists and toggle its visibility
+          if (marker.getElement()) {
+              if (markersVisible) {
+                  marker.getElement().style.display = 'block'; // Show marker
+                  marker.addTo(map); // Add marker back to the map
+              } else {
+                  marker.getElement().style.display = 'none'; // Hide marker
+                  marker.remove(); // Remove marker from the map
+              }
+          }
+      });
+      // Update the button state text
+      document.getElementById("rotation-z-value").textContent = markersVisible ? "On" : "Off"; 
+      
+      // Prevent updating clusters if markers are not visible
+      if (!markersVisible) {
+          map.off("moveend", debouncedUpdateClusters); // Unsubscribe from moveend event
+      } else {
+          map.on("moveend", debouncedUpdateClusters); // Subscribe back to moveend event
+      }
+  }
+
+  // Function to toggle polygons visibility
+  function togglePolygons() {
+      polygonsVisible = !polygonsVisible; // Toggle state
+
+      polygons.forEach(polygon => {
+          const layerId = `${polygon.id}-image-layer`;
+          const maskLayerId = `${polygon.id}-mask-layer`; // Define the mask layer ID
+
+          if (map.getLayer(layerId)) {
+              const visibility = polygonsVisible ? 'visible' : 'none'; // Set visibility based on the current state
+              map.setLayoutProperty(layerId, 'visibility', visibility);
+              map.setLayoutProperty(maskLayerId, 'visibility', visibility); // Also toggle the mask layer visibility
+          }
+      });
+
+      document.getElementById("rotation-y-value").textContent = polygonsVisible ? "On" : "Off"; // Update button state
+  }
+
+  // Add event listeners for the existing buttons
+  document.getElementById("toggle-rotation-y").addEventListener("click", togglePolygons);
+
+  document.getElementById("toggle-rotation-z").addEventListener("click", () => {
+      toggleMarkers(); // Call the toggle function directly
+  });
+    // Add this code to your existing script section
 document.getElementById("color-red").addEventListener("input", (event) => {
     const value = event.target.value;
     document.getElementById("color-red-value").textContent = value; // Update displayed value
+    document.getElementById("color-red-value").value = value; // Update number input
     updateColor(); // Call function to update color immediately
 });
 
 document.getElementById("color-green").addEventListener("input", (event) => {
     const value = event.target.value;
     document.getElementById("color-green-value").textContent = value; // Update displayed value
+    document.getElementById("color-green-value").value = value; // Update number input
     updateColor(); // Call function to update color immediately
 });
 
 document.getElementById("color-blue").addEventListener("input", (event) => {
     const value = event.target.value;
     document.getElementById("color-blue-value").textContent = value; // Update displayed value
+    document.getElementById("color-blue-value").value = value; // Update number input
+    updateColor(); // Call function to update color immediately
+});
+
+// Add event listeners for number inputs to update sliders
+document.getElementById("color-red-value").addEventListener("input", (event) => {
+    const value = event.target.value;
+    document.getElementById("color-red").value = value; // Update range input
+    updateColor(); // Call function to update color immediately
+});
+
+document.getElementById("color-green-value").addEventListener("input", (event) => {
+    const value = event.target.value;
+    document.getElementById("color-green").value = value; // Update range input
+    updateColor(); // Call function to update color immediately
+});
+
+document.getElementById("color-blue-value").addEventListener("input", (event) => {
+    const value = event.target.value;
+    document.getElementById("color-blue").value = value; // Update range input
     updateColor(); // Call function to update color immediately
 });
 
@@ -2619,17 +2789,140 @@ function updateCrosshairAfterBefore(value) {
     crosshair.style.setProperty('--crosshair-before-height', `${value}px`); // Height of ::before
 }
 
+// Add event listeners for crosshair size sliders
 document.getElementById("crosshair-before-after").addEventListener("input", (event) => {
     const value = event.target.value;
     document.getElementById("crosshair-before-after-value").textContent = value;
     updateCrosshairBeforeAfter(value);
+    document.getElementById("crosshair-before-after-value").value = value; // Update number input
 });
 
 document.getElementById("crosshair-after-before").addEventListener("input", (event) => {
     const value = event.target.value;
     document.getElementById("crosshair-after-before-value").textContent = value;
     updateCrosshairAfterBefore(value);
+    document.getElementById("crosshair-after-before-value").value = value; // Update number input
 });
+
+// Add event listeners for number inputs to update sliders
+document.getElementById("crosshair-before-after-value").addEventListener("input", (event) => {
+    const value = event.target.value;
+    document.getElementById("crosshair-before-after").value = value; // Update range input
+    updateCrosshairBeforeAfter(value);
+});
+
+document.getElementById("crosshair-after-before-value").addEventListener("input", (event) => {
+    const value = event.target.value;
+    document.getElementById("crosshair-after-before").value = value; // Update range input
+    updateCrosshairAfterBefore(value);
+});
+
+
+
+
+                  // Add event listeners for the new buttons
+                  document.getElementById("savecrosshair").addEventListener("click", async (event) => {
+        event.stopPropagation();
+
+        try {
+            const topicId = "0.0.8490665";
+
+            const colorRed = document.getElementById("color-red").value;
+            const colorGreen = document.getElementById("color-green").value;
+            const colorBlue = document.getElementById("color-blue").value;
+
+            const crosshairBeforeWidth = document.getElementById("crosshair-before-after").value;
+            const crosshairAfterHeight = document.getElementById("crosshair-after-before").value;
+
+            // Construct the message data
+            const messageData = {
+                data: {
+                    color: {
+                        red: colorRed,
+                        green: colorGreen,
+                        blue: colorBlue
+                    },
+                    crosshair: {
+                        beforeWidth: crosshairBeforeWidth,
+                        afterHeight: crosshairAfterHeight
+                    }
+                },
+            };
+
+            const message = JSON.stringify(messageData);
+
+            const receipt = await window.HashinalsWalletConnectSDK.submitMessageToTopic(
+                topicId,
+                message
+            );
+            console.log("Profile settings updated successfully:", receipt);
+            
+        } catch (error) {
+            console.error("Error updating settings picture:", error);
+            // Removed alert
+        }
+      });
+
+
+
+      async function loadProfileCrosshair() {
+        const topicId = "0.0.8490665";
+        const accountObjectSettings = []; // Initialize an empty array to store account Settings
+        try {
+            const result = await window.HashinalsWalletConnectSDK.getMessages(topicId);
+
+            // Check if result exists and has messages
+            if (!result || !Array.isArray(result.messages) || result.messages.length === 0) {
+                return accountObjectSettings; // Return empty array if no messages
+            }
+
+            // Filter messages to find those from the current user
+            const userMessages = result.messages.filter(message => message.payer === globalAccountId);
+
+            // Get the last message from the filtered user messages
+            const lastMessage = userMessages[userMessages.length - 1];
+
+            // Check if the last message has valid data
+            if (lastMessage && lastMessage.data) {
+
+                // Extract relevant data
+                const { rotation, position, color, scale, crosshair } = lastMessage.data;
+
+                // Store the settings in accountObjectSettings
+                accountObjectSettings.push({
+                    color,
+                    crosshair
+                });
+
+                document.getElementById("color-red").value = color.red; // Set color red
+                document.getElementById("color-red-value").value = color.red; // Set color red value
+                document.getElementById("color-green").value = color.green; // Set color green
+                document.getElementById("color-green-value").value = color.green; // Set color green value
+                document.getElementById("color-blue").value = color.blue; // Set color blue
+                document.getElementById("color-blue-value").value = color.blue; // Set color blue value
+
+                document.getElementById("crosshair-before-after").value = crosshair.beforeWidth; // Set crosshair before width
+                document.getElementById("crosshair-before-after-value").value = crosshair.beforeWidth; // Set crosshair before width value
+                document.getElementById("crosshair-after-before").value = crosshair.afterHeight; // Set crosshair after height
+                document.getElementById("crosshair-after-before-value").value = crosshair.afterHeight; // Set crosshair after height value
+
+                // Call update functions to apply the loaded values
+                updateColor(); // Update crosshair color
+                updateCrosshairBeforeAfter(crosshair.beforeWidth); // Update crosshair before width
+                updateCrosshairAfterBefore(crosshair.afterHeight); // Update crosshair after height
+
+            } else {
+                console.log("Last message does not have valid data."); // Log invalid data
+            }
+
+            return accountObjectSettings; // Return the populated array
+
+        } catch (error) {
+            console.log("Error in loadProfileCrosshair:", error);
+            return []; // Return empty array instead of throwing error
+        }
+      }
+
 
 
             // Add event listeners for the new buttons
@@ -2638,11 +2931,12 @@ document.getElementById("crosshair-after-before").addEventListener("input", (eve
         const inputValue = document.getElementById("object-input").value;
         
         try {
-          const topicId = "0.0.8411947";
+          const topicId = "0.0.8491485";
           const cleanUrl = inputValue.replace(/\?network=mainnet$/, "");
 
           const messageData = {
             data: {
+              settings: [],
               urls: [cleanUrl],
             },
           };
@@ -2663,29 +2957,86 @@ document.getElementById("crosshair-after-before").addEventListener("input", (eve
       });
 
 
+                        // Add event listeners for the new buttons
+                        document.getElementById("savesettings").addEventListener("click", async (event) => {
+        event.stopPropagation();
+
+        try {
+            const topicId = "0.0.8491485";
+            const profileObjectUrl = await loadProfileObject();
+            const cleanUrl = (profileObjectUrl.length > 0 ? profileObjectUrl[0].replace(/\?network=mainnet$/, "") : defaultModelUrl);
+
+            // Read values from inputs
+            const rotationX = document.getElementById("rotation-x").value;
+            const rotationY = document.getElementById("rotation-y").value;
+            const rotationZ = document.getElementById("rotation-z").value;
+
+            const positionX = document.getElementById("position-x").value;
+            const positionY = document.getElementById("position-y").value;
+            const positionZ = document.getElementById("position-z").value;
+
+            const scaleFactor = document.getElementById("scale-factor").value;
+
+            // Construct the message data
+            const messageData = {
+                data: {
+                    settings : {
+                      rotation: {
+                        x: rotationX,
+                        y: rotationY,
+                        z: rotationZ
+                    },
+                    position: {
+                        x: positionX,
+                        y: positionY,
+                        z: positionZ
+                    },
+                    scale: {
+                      scaleFactor
+                    },
+                },
+                urls: [cleanUrl],
+              },
+            };
+
+            const message = JSON.stringify(messageData);
+
+            const receipt = await window.HashinalsWalletConnectSDK.submitMessageToTopic(
+                topicId,
+                message
+            );
+            console.log("Profile settings updated successfully:", receipt);
+            
+        } catch (error) {
+            console.error("Error updating settings picture:", error);
+            // Removed alert
+        }
+      });
 
       async function loadProfileObject() {
         
-        const topicId = "0.0.8411947";
+        const topicId = "0.0.8491485";
         const accountObjectUrl = []; // Initialize an empty array to store account URLs
         try {
             const result = await window.HashinalsWalletConnectSDK.getMessages(topicId);
 
             // Check if result exists and has messages
-            if (!result || !Array.isArray(result.messages)) {
+            if (!result || !Array.isArray(result.messages) || result.messages.length === 0) {
                 console.log("No profile object found, using defaults");
+                return accountObjectUrl; // Return empty array if no messages
             }
 
-            // Process all messages to build the accountObjectUrl array
-            result.messages.forEach(message => {
-                if (message.payer && message.data && message.data.urls && message.data.urls.length > 0) {
-                    // Check if the message payer matches the globalAccountId
-                    if (message.payer === globalAccountId) {
-                        // Store the URL for this account
-                        accountObjectUrl.push(message.data.urls[0]); // Accessing the first URL
-                    }
-                }
-            });
+            // Filter messages to find those from the current user
+            const userMessages = result.messages.filter(message => message.payer === globalAccountId);
+
+            // Get the last message from the filtered user messages
+            const lastMessage = userMessages[userMessages.length - 1];
+
+            // Check if the last message has valid data
+            if (lastMessage && lastMessage.data && lastMessage.data.urls && lastMessage.data.urls.length > 0) {
+                // Store the URL for this account
+                accountObjectUrl.push(lastMessage.data.urls[0]); // Accessing the first URL
+            }
 
             return accountObjectUrl; // Return the populated array
 
@@ -2694,75 +3045,293 @@ document.getElementById("crosshair-after-before").addEventListener("input", (eve
             return []; // Return empty array instead of throwing error
         }
       }
-      loadProfileObject();
 
+      async function loadProfileSettings() {
+        const topicId = "0.0.8491485";
+        const accountObjectSettings = []; // Initialize an empty array to store account Settings
+        try {
+            const result = await window.HashinalsWalletConnectSDK.getMessages(topicId);
 
-const ufoLoader = new THREE.GLTFLoader(); // Create a GLTFLoader instance
+            // Check if result exists and has messages
+            if (!result || !Array.isArray(result.messages) || result.messages.length === 0) {
+                return accountObjectSettings; // Return empty array if no messages
+            }
 
-// Load the GLTF model
-ufoLoader.load('https://kiloscribe.com/api/inscription-cdn/0.0.8392276?network=mainnet', (gltf) => { // Replace 'URL_TO_YOUR_GTLF_MODEL' with the actual URL
-    const ufoModel = gltf.scene; // Get the loaded model
-    scene.add(ufoModel); // Add the model to the scene
-    // Set the initial position, rotation, and scale of the model
-    ufoModel.position.set(0, -3, -8); // Set the initial position of the model
-    ufoModel.rotation.set(THREE.MathUtils.degToRad(0), THREE.MathUtils.degToRad(90), THREE.MathUtils.degToRad(45)); // Set the rotation of the model
-    const scaleFactor = 20; // Scale factor for the model
-    ufoModel.scale.set(scaleFactor, scaleFactor, scaleFactor); // Scale the model uniformly
+            // Filter messages to find those from the current user
+            const userMessages = result.messages.filter(message => message.payer === globalAccountId);
 
-    // Add event listeners for rotation sliders
-    document.getElementById("rotation-x").addEventListener("input", (event) => {
-        const value = event.target.value;
-        document.getElementById("rotation-x-value").textContent = value; // Update displayed value
-        ufoModel.rotation.x = THREE.MathUtils.degToRad(value); // Convert degrees to radians
-    });
+            // Get the last message from the filtered user messages
+            const lastMessage = userMessages[userMessages.length - 1];
 
-    document.getElementById("rotation-y").addEventListener("input", (event) => {
-        const value = event.target.value;
-        document.getElementById("rotation-y-value").textContent = value; // Update displayed value
-        ufoModel.rotation.y = THREE.MathUtils.degToRad(value); // Convert degrees to radians
-    });
+            // Check if the last message has valid data
+            if (lastMessage && lastMessage.data) {
+              
+              // Check if settings are empty
+              if (Array.isArray(lastMessage.data.settings) && lastMessage.data.settings.length === 0) {
+                const urls = lastMessage.data.urls; // This will give you the entire array
+                // Store the settings in accountObjectSettings
+                accountObjectSettings.push({ urls });
+              } else {
+                // Extract relevant data
+                const { rotation, position, scale } = lastMessage.data.settings;
+                const urls = lastMessage.data.urls; // This will give you the entire array
 
-    document.getElementById("rotation-z").addEventListener("input", (event) => {
-        const value = event.target.value;
-        document.getElementById("rotation-z-value").textContent = value; // Update displayed value
-        ufoModel.rotation.z = THREE.MathUtils.degToRad(value); // Convert degrees to radians
-    });
+                // Store the settings in accountObjectSettings
+                accountObjectSettings.push({ rotation, position, scale, urls });
 
-    // Add event listeners for position sliders
-    document.getElementById("position-x").addEventListener("input", (event) => {
-        const value = event.target.value;
-        document.getElementById("position-x-value").textContent = value; // Update displayed value
-        ufoModel.position.x = parseFloat(value); // Update the x position of the model
-    });
+                // Update input fields with the extracted data
+                document.getElementById("rotation-x").value = rotation.x; // Set rotation X
+                document.getElementById("rotation-x-value").value = rotation.x; // Set rotation X value
+                document.getElementById("rotation-y").value = rotation.y; // Set rotation Y
+                document.getElementById("rotation-y-value").value = rotation.y; // Set rotation Y value
+                document.getElementById("rotation-z").value = rotation.z; // Set rotation Z
+                document.getElementById("rotation-z-value").value = rotation.z; // Set rotation Z value
 
-    document.getElementById("position-y").addEventListener("input", (event) => {
-        const value = event.target.value;
-        document.getElementById("position-y-value").textContent = value; // Update displayed value
-        ufoModel.position.y = parseFloat(value); // Update the y position of the model
-    });
+                document.getElementById("position-x").value = position.x; // Set position X
+                document.getElementById("position-x-value").value = position.x; // Set position X value
+                document.getElementById("position-y").value = position.y; // Set position Y
+                document.getElementById("position-y-value").value = position.y; // Set position Y value
+                document.getElementById("position-z").value = position.z; // Set position Z
+                document.getElementById("position-z-value").value = position.z; // Set position Z value
 
-    // Add Z position slider
-    document.getElementById("position-z").addEventListener("input", (event) => {
-        const value = event.target.value;
-        document.getElementById("position-z-value").textContent = value; // Update displayed value
-        ufoModel.position.z = parseFloat(value); // Update the z position of the model
-    });
+                // Add scale factor input update
+                document.getElementById("scale-factor").value = scale.scaleFactor; // Update scale factor input
+                document.getElementById("scale-factor-value").value = scale.scaleFactor; // Update scale factor value
 
-    // Add scale factor slider
-    document.getElementById("scale-factor").addEventListener("input", (event) => {
-        const value = event.target.value;
-        document.getElementById("scale-factor-value").textContent = value; // Update displayed value
-        const scaleFactor = parseFloat(value); // Get the scale factor
+                // Update the object's position and rotation
+                const ufoModel = scene.getObjectByName('gltfModel'); // Assuming the UFO model is named 'ufo'
+                if (ufoModel) {
+                    ufoModel.rotation.x = THREE.MathUtils.degToRad(rotation.x);
+                    ufoModel.rotation.y = THREE.MathUtils.degToRad(rotation.y);
+                    ufoModel.rotation.z = THREE.MathUtils.degToRad(rotation.z);
+                    ufoModel.position.set(position.x, position.y, position.z);
+                    ufoModel.scale.set(scale.scaleFactor, scale.scaleFactor, scale.scaleFactor); // Scale the model
+                }
+              }
+            } else {
+              console.log("Last message does not have valid data."); // Log invalid data
+            }
+
+            return accountObjectSettings; // Return the populated array
+        } catch (error) {
+            console.log("Error in loadProfileSettings:", error);
+            return []; // Return empty array instead of throwing error
+        }
+      }
+
+    
+
+// Define a default model URL
+const defaultModelUrl = 'https://kiloscribe.com/api/inscription-cdn/0.0.8392276?network=mainnet'; // Replace with your actual default model URL
+
+// Function to load the UFO model
+async function loadUfoModel(modelUrl) {
+    const ufoLoader = new THREE.GLTFLoader(); // Create a GLTFLoader instance
+
+    // Check if the model URL is defined and valid
+    if (!modelUrl || typeof modelUrl !== 'string' || modelUrl.trim() === '') {
+        modelUrl = defaultModelUrl; // Use the default model URL
+    }
+
+    // Load the GLTF model
+    try {
+        const gltf = await new Promise((resolve, reject) => {
+            ufoLoader.load(modelUrl, resolve, undefined, (error) => {
+                console.error("Error loading GLTF model:", error);
+                reject(error);
+            });
+        });
+        
+        const ufoModel = gltf.scene; // Get the loaded model
+
+        // Step 1: Calculate the model's bounding box
+        const box = new THREE.Box3().setFromObject(ufoModel);
+        const modelSize = new THREE.Vector3();
+        box.getSize(modelSize); // Get the size of the model
+
+        // Step 2: Define the bounding box dimensions
+        const boundingBoxSize = new THREE.Vector3(10, 10, 10); // Width, Height, Depth
+
+        // Step 3: Calculate the scale factor
+        const scaleFactor = Math.min(
+            boundingBoxSize.x / modelSize.x,
+            boundingBoxSize.y / modelSize.y,
+            boundingBoxSize.z / modelSize.z
+        );
+
+        // Step 4: Apply the scale to the model
         ufoModel.scale.set(scaleFactor, scaleFactor, scaleFactor); // Scale the model uniformly
-    });
-}, undefined, (error) => {
-    console.error('An error occurred while loading the GLTF model:', error);
-});
+
+        const isNewUser = modelUrl === defaultModelUrl; // Set to true if no URLs are found
+
+        // Check if the user has loaded their profile object
+        if (modelUrl !== defaultModelUrl) {
+            // Load user-specific settings if available
+            const profileSettings = await loadProfileSettings(); // Load profile settings
+            if (profileSettings.length === 0 || !profileSettings[0].position) {
+                // If no settings loaded, use bounding box for position
+                ufoModel.position.set(box.min.x, box.min.y, box.min.z); // Use bounding box min for position
+                ufoModel.scale.set(scaleFactor, scaleFactor, scaleFactor); // Use calculated scale factor
+                        // Step 5: Position the model within the bounding box
+                ufoModel.position.set(0, -5, -30); // Adjust as needed
+            } else {
+                // Apply user-specific settings
+                ufoModel.position.set(
+                    parseFloat(document.getElementById("position-x").value),
+                    parseFloat(document.getElementById("position-y").value),
+                    parseFloat(document.getElementById("position-z").value)
+                );
+                ufoModel.rotation.set(
+                    THREE.MathUtils.degToRad(document.getElementById("rotation-x").value),
+                    THREE.MathUtils.degToRad(document.getElementById("rotation-y").value),
+                    THREE.MathUtils.degToRad(document.getElementById("rotation-z").value)
+                );
+                const userScaleFactor = parseFloat(document.getElementById("scale-factor").value);
+                ufoModel.scale.set(userScaleFactor, userScaleFactor, userScaleFactor); // Scale the model uniformly
+            }
+        } else {
+            // Default settings for new users
+            ufoModel.position.set(0, -3, -8); // Default position
+            ufoModel.rotation.set(
+                THREE.MathUtils.degToRad(0),
+                THREE.MathUtils.degToRad(90),
+                THREE.MathUtils.degToRad(45)
+            ); // Default rotation
+            const defaultScaleFactor = 20; // Default scale factor
+            ufoModel.scale.set(defaultScaleFactor, defaultScaleFactor, defaultScaleFactor); // Scale the model uniformly
+        }
+
+        // Add the model to the scene
+        scene.add(ufoModel);
+
+        // Existing event listeners for rotation and position sliders
+        document.getElementById("rotation-x").addEventListener("input", (event) => {
+            const value = event.target.value;
+            document.getElementById("rotation-x-value").value = value; // Update number input
+            ufoModel.rotation.x = THREE.MathUtils.degToRad(value); // Convert degrees to radians
+        });
+
+        document.getElementById("rotation-y").addEventListener("input", (event) => {
+            const value = event.target.value;
+            document.getElementById("rotation-y-value").value = value; // Update number input
+            ufoModel.rotation.y = THREE.MathUtils.degToRad(value); // Convert degrees to radians
+        });
+
+        document.getElementById("rotation-z").addEventListener("input", (event) => {
+            const value = event.target.value;
+            document.getElementById("rotation-z-value").value = value; // Update number input
+            ufoModel.rotation.z = THREE.MathUtils.degToRad(value); // Convert degrees to radians
+        });
+
+        // Add event listeners for position sliders
+        document.getElementById("position-x").addEventListener("input", (event) => {
+            const value = event.target.value;
+            document.getElementById("position-x-value").value = value; // Update number input
+            ufoModel.position.x = parseFloat(value); // Update the x position of the model
+        });
+
+        document.getElementById("position-y").addEventListener("input", (event) => {
+            const value = event.target.value;
+            document.getElementById("position-y-value").value = value; // Update number input
+            ufoModel.position.y = parseFloat(value); // Update the y position of the model
+        });
+
+        // Add Z position slider
+        document.getElementById("position-z").addEventListener("input", (event) => {
+            const value = event.target.value;
+            document.getElementById("position-z-value").value = value; // Update number input
+            ufoModel.position.z = parseFloat(value); // Update the z position of the model
+        });
+
+        // Add scale factor slider
+        document.getElementById("scale-factor").addEventListener("input", (event) => {
+            const value = event.target.value;
+            document.getElementById("scale-factor-value").value = value; // Update number input
+            const scaleFactor = parseFloat(value); // Get the scale factor
+            ufoModel.scale.set(scaleFactor, scaleFactor, scaleFactor); // Scale the model uniformly
+        });
+
+        // Add event listeners for number inputs to update sliders
+        document.getElementById("rotation-x-value").addEventListener("input", (event) => {
+            const value = event.target.value;
+            document.getElementById("rotation-x").value = value; // Update range input
+            ufoModel.rotation.x = THREE.MathUtils.degToRad(value); // Convert degrees to radians
+        });
+
+        document.getElementById("rotation-y-value").addEventListener("input", (event) => {
+            const value = event.target.value;
+            document.getElementById("rotation-y").value = value; // Update range input
+            ufoModel.rotation.y = THREE.MathUtils.degToRad(value); // Convert degrees to radians
+        });
+
+        document.getElementById("rotation-z-value").addEventListener("input", (event) => {
+            const value = event.target.value;
+            document.getElementById("rotation-z").value = value; // Update range input
+            ufoModel.rotation.z = THREE.MathUtils.degToRad(value); // Convert degrees to radians
+        });
+
+        document.getElementById("position-x-value").addEventListener("input", (event) => {
+            const value = event.target.value;
+            document.getElementById("position-x").value = value; // Update range input
+            ufoModel.position.x = parseFloat(value); // Update the x position of the model
+        });
+
+        document.getElementById("position-y-value").addEventListener("input", (event) => {
+            const value = event.target.value;
+            document.getElementById("position-y").value = value; // Update range input
+            ufoModel.position.y = parseFloat(value); // Update the y position of the model
+        });
+
+        document.getElementById("position-z-value").addEventListener("input", (event) => {
+            const value = event.target.value;
+            document.getElementById("position-z").value = value; // Update range input
+            ufoModel.position.z = parseFloat(value); // Update the z position of the model
+        });
+
+        document.getElementById("scale-factor-value").addEventListener("input", (event) => {
+            const value = event.target.value;
+            document.getElementById("scale-factor").value = value; // Update range input
+            const scaleFactor = parseFloat(value); // Get the scale factor
+            ufoModel.scale.set(scaleFactor, scaleFactor, scaleFactor); // Scale the model uniformly
+        });
+
+        // Load current values into input fields after model is loaded
+        document.getElementById("position-x").value = ufoModel.position.x;
+        document.getElementById("position-y").value = ufoModel.position.y;
+        document.getElementById("position-z").value = ufoModel.position.z;
+        document.getElementById("scale-factor").value = ufoModel.scale.x; // Assuming uniform scaling
+        document.getElementById("position-x-value").value = ufoModel.position.x;
+        document.getElementById("position-y-value").value = ufoModel.position.y;
+        document.getElementById("position-z-value").value = ufoModel.position.z;
+
+        // Convert radians to degrees for display
+        const rotationXInDegrees = THREE.MathUtils.radToDeg(ufoModel.rotation.x);
+        const rotationYInDegrees = THREE.MathUtils.radToDeg(ufoModel.rotation.y);
+        const rotationZInDegrees = THREE.MathUtils.radToDeg(ufoModel.rotation.z);
+
+        document.getElementById("rotation-x").value = Math.round(rotationXInDegrees); // Round to nearest integer
+        console.log('rotation x: ' + Math.round(rotationXInDegrees)); // Log rounded value
+        document.getElementById("rotation-y").value = Math.round(rotationYInDegrees); // Round to nearest integer
+        console.log('rotation y: ' + Math.round(rotationYInDegrees)); // Log rounded value
+        document.getElementById("rotation-z").value = Math.round(rotationZInDegrees); // Round to nearest integer
+        console.log('rotation z: ' + Math.round(rotationZInDegrees)); // Log rounded value
 
 
+        document.getElementById("rotation-x-value").value = Math.round(rotationXInDegrees);
+        console.log('rotation x: ' + Math.round(rotationXInDegrees)); // Log rounded value
+        document.getElementById("rotation-y-value").value = Math.round(rotationYInDegrees);
+        console.log('rotation y: ' + Math.round(rotationYInDegrees)); // Log rounded value
+        document.getElementById("rotation-z-value").value = Math.round(rotationZInDegrees);
+        console.log('rotation z: ' + rotationZInDegrees.toFixed(3)); // Log to three decimal places
+        document.getElementById("scale-factor-value").value = ufoModel.scale.x;
+
+
+    } catch (error) {
+        console.error('An error occurred while loading the GLTF model:', error);
+    }
 }
 
-
+      }
     
     </script>
   <script src="script.js"></script>
